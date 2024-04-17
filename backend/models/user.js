@@ -33,11 +33,9 @@ const UserSchema = new mongoose.Schema({
   },
   image:{
     type: String,
-    default: {}
   },
   inbox:{
     type:[String],
-    default: {}
   },
   badges:{
     type:[String]

@@ -1,186 +1,102 @@
 import React, { useState } from "react";
-import "./Login.css";
-import {Link} from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import {auth,provider} from "../firebase.js"
-import {signInWithPopup} from "firebase/auth"
-import GoogleButton from 'react-google-button'
+import GoogleButton from 'react-google-button';
 
-function Login({user,setUser}) {
-  const navigate = useNavigate()
+function Login({ user, setUser }) {
+  const navigate = useNavigate();
 
-  //hooks to handle the changing states
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
-  const [isPasswordValid, setIsPasswordValid] = useState(false);
-  const [isUsernameValid, setIsUsernameValid] = useState(false);
-  const [allEntry, setAllEntry] = useState([]);
-  // const [currentView,setView]=useState("Login")
-  // state to validate the email
-  const [validEmail,setValidemail]=useState(false)
 
-  //variable to hold the regular expression to check  correct email
-  const emailValidation= (email) => {  
-
-      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-      return emailRegex.test(email);
-    };
-
-  //function to handle input
   const handlePasswordChange = (event) => {
     event.preventDefault();
     const newPassword = event.target.value;
     setPassword(newPassword);
-    // setIsPasswordValid(newPassword.length >= 8);
   };
 
   const handleUsernameChange = (event) => {
     event.preventDefault();
     const newUsername = event.target.value;
     setUsername(newUsername);
-    // setIsUsernameValid(newUsername.length >= 5);
   };
 
-  const handleEmail=(event)=>{
-     const k=event.target.value;
-     setEmail(k);
-    //  setValidemail(emailValidation(k));
+  const submitFunction = async (event) => {
+    event.preventDefault();
+    if (username.length < 5) {
+      alert("Username must be at least 5 characters long.");
+      return;
+    }
 
-  }
-  
-  // const blabla = (event)=>{
-  //   const logig =async()=>{
-  //     try{
-  //       const res = await axios.get("http://localhost:3001/api/google/google")
-  //       console.log(res.data);
-  //       setUser(res.data)
-  //       navigate('/dues')
-  //       // setUser(res.data).then(console.log("userdata"+user))
-  //     }catch(err){
-  //         console.log(err);
-  //     }
-  //   }
-  //   logig()
-  // }
+    if (password.length < 8) {
+      alert("Password must be at least 8 characters long.");
+      return;
+    }
 
-  const submitFunction = (event) => {
-    event.preventDefault(); // Prevent the form from submitting the traditional way
-    // if (isPasswordValid && isUsernameValid) {
-      const Entry = { username: username, password: password, email: email };
-      // setAllEntry([allEntry, Entry]);
-      // console.log(allEntry);
-      
-      // Handle form submission logic here
-      const Logi =async()=>{
-        try{
-          const res = await axios.post("http://localhost:3001/api/auth/signin",{username,email,password})
-          console.log("response data:",res.data);
-          setUser(res.data)
-          // store the user in localStorage
-          localStorage.setItem('user', JSON.stringify(res.data))
-          navigate('/dashboard')
-          // setUser(res.data).then(console.log("userdata"+user))
-        }catch(err){
-            console.log(err);
-        }
-      }
-      Logi()
-      // setUserData("sd");
-      // console.log(userData);
-      //making the credentials empty after submitting
-      setEmail("");
-      setPassword("")
-      setUsername("")
-      alert("Logged in successfully")
-    
-    // } else {
-      // alert("Invalid username or password. Please check the requirements.");
-
+    const userData = { username, password };
+    console.log(userData)
+    // try {
+    //   const res = await axios.post("http://localhost:3001/api/auth/signin", userData);
+    //   setUser(res.data);
+    //   localStorage.setItem('user', JSON.stringify(res.data));
+    //   navigate('/dashboard');
+    // } catch (err) {
+    //   console.log(err);
     // }
+
+    setPassword("");
+    setUsername("");
+    alert("Logged in successfully");
   };
-  
-  const googlesekar = (req,res)=>{
-    signInWithPopup(auth,provider).then((result)=>{
-      console.log(result);
-      console.log(result.user.photoURL);
-      axios
-            .post("http://localhost:3001/api/auth/google", {
-              username: result.user.displayName,
-              email: result.user.email,
-              image: result.user.photoURL,
-            })
-            .then((res) => {
-              console.log(res.data)
-              setUser(res.data)
-            localStorage.setItem("user", JSON.stringify(res.data))
-              navigate("/dashboard")
-            });
-    }).catch((err)=>{console.log(err)})
-  }
-   
+
   return (
     <>
-
-    <form onSubmit={submitFunction}>
-      <div className="super-container">
-      <div className="container-login">
-
-        <div className="title-login">
-          Login
-        </div>
-
-        <div className="content">
-          <div className="user-details">
-            <div className="input-box">
-              <label htmlFor="username">Username</label>
+      <form onSubmit={submitFunction} className="flex justify-center items-center h-screen bg-gray-100">
+        <div className="w-full max-w-sm p-6 bg-white rounded-lg shadow-lg">
+          <div className="text-3xl font-bold text-center text-purple-600 mb-6">Login</div>
+          <div className="space-y-4">
+            <div className="flex flex-col">
+              <label htmlFor="username" className="text-sm font-semibold">Username</label>
               <input
                 type="text"
                 placeholder="Enter your username"
                 value={username}
                 name="username"
                 onChange={handleUsernameChange}
-                className="input-login"
+                className="input-login border-b-2 border-purple-600 py-2 px-3 focus:outline-none focus:border-purple-700 transition duration-300"
                 required
               />
             </div>
             
-            <div className="input-box">
-              <label htmlFor="psw">Password</label>
+            <div className="flex flex-col">
+              <label htmlFor="password" className="text-sm font-semibold">Password</label>
               <input
                 type="password"
                 placeholder="Enter your password"
                 name="password"
                 value={password}
                 onChange={handlePasswordChange}
-                className="input-login"
+                className="input-login border-b-2 border-purple-600 py-2 px-3 focus:outline-none focus:border-purple-700 transition duration-300"
                 required
               />
             </div>
-          </div>
 
-          <div className="btn-login flex justify-between items-center">
-
-            <div 
-            className="button"
-            onClick={submitFunction}
+            <button 
+              type="submit"
+              className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300"
             >
-           Login
-            </div>  
+              Login
+            </button>
 
-            <GoogleButton  onClick={googlesekar}/>
-          </div>
-          <div className="forgotPass">
-           <div>Not having any account? </div>
-              <div> <Link to="/signup">
+            <div className="text-center text-sm">
+              Not having any account? 
+              <Link to="/signup" className="text-purple-600 hover:underline font-semibold">
                 Sign up
-            </Link></div>
+              </Link>
             </div>
+          </div>
         </div>
-        </div>
-      </div>
-    </form>
+      </form>
     </>
   );
 }

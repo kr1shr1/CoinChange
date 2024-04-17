@@ -3,7 +3,7 @@ import Navbar from '../../Components/Navbar/Navbar'
 import {Button} from 'react-bootstrap'
 import Modal from 'react-bootstrap/Modal';
 import axios from "axios"
-import TransactionCard from '../../Components/Cards/TransactionCard';
+import TransactionCard from '../../Components/cards/TransactionCard'
 import { CSVLink, CSVDownload } from "react-csv"
 import { useTranslation,initReactI18next } from "react-i18next"; 
 import i18next from "i18next"

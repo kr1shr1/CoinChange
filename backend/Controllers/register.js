@@ -1,48 +1,44 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 
-module.exports = async(req, res)=>{
-    const form = req.body;
-    req.checkBody('name', 'Name is required').notEmpty();
-    req.checkBody('email', 'Email is required').notEmpty();
-    req.checkBody('email', 'Email is not valid').isEmail();
-    let errors = req.validationErrors();
-    if(errors){
-        res.send("Some Parameter is misssing...");
+module.exports = async (req, res) => {
+  const form = req.body;
+  console.log(form)
+  let query = { $or: [{ username: form.username }, { email: form.email }] };
+  const existingUserEmail = await User.findOne(query)
+    if (existingUserEmail) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Email is already in use." });
     }
-    else{
-    let query = {$or: [{username: from.username}, {email: form.email}]};
-    await User.findOne(query, function(err, user){
-      if(err) {console.log("Error in finding a user in database")}
-      let newUser = new User({
-        name: form.name,
-        email: form.email,
-        username: form.username,
-        password: form.password
-      });     
-      if(user){
-        res.send('register', {message: req.flash('danger', 'Username AND/OR Email already exists !'), newUser: newUser});
-      }
-      else {            
-        bcrypt.genSalt(10, function(err, salt){
-          bcrypt.hash(newUser.password, salt, async function(err, hash){
-            if(err){
-              console.log(err);
-              return;
-            }
-            newUser.password = hash;
-            await newUser.save(function(err){
-              if(err){
-                console.log(err);
-                return;
-              } else {
-                req.flash('success', 'The user : ' + newUser.name + ' is registered and can log in');
-                res.redirect('/admin/login');
-              }
-            });
-          });
-        });
-      } 
+
+    const newUser = new User({
+      name: form.name,
+      email: form.email,
+      username: form.username,
+      password: form.password
     });
-}
-}
+
+    bcrypt.genSalt(10, (err, salt) => {
+      if (err) {
+        console.log("Error in generating salt:", err);
+        return res.status(500).json({ error: 'Internal server error' });
+      }
+
+      bcrypt.hash(newUser.password, salt, async (err, hash) => {
+        if (err) {
+          console.log("Error in hashing password:", err);
+          return res.status(500).json({ error: 'Internal server error' });
+        }
+
+        newUser.password = hash;
+        try {
+          await newUser.save();
+          return res.status(201).json({ message: 'User registered successfully', newUser });
+        } catch (err) {
+          console.log("Error in saving user:", err);
+          return res.status(500).json({ error: 'Internal server error' });
+        }
+      });
+    });
+  };
