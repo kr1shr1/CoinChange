@@ -25,11 +25,11 @@ function Navbar({thememode,toggle,setUser,user,setFlag,flag}) {
       try{
         const loggedInUser = localStorage.getItem("user");
         if (loggedInUser) {
-          console.log(loggedInUser);
+          // console.log(loggedInUser);
           const foundUser = JSON.parse(loggedInUser);
-          console.log("found user",foundUser  )
+          // console.log("found user",foundUser  )
           setNavuser(foundUser)
-          await setUser(foundUser);
+          // await setUser(foundUser);
         }
       }catch(err){
         console.log(err)
@@ -38,8 +38,8 @@ function Navbar({thememode,toggle,setUser,user,setFlag,flag}) {
     check()
   },[user?._id,flag])
 
-  console.log(navuser)
-  console.log(user);
+  // console.log(navuser)
+  // console.log(user);
   const [showNav, setShowNav] = useState(false);
   // const [isLoggedin,setIsloggedIn]=useState(true)
   // console.log(thememode)

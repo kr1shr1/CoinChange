@@ -6,7 +6,7 @@ import GoogleButton from 'react-google-button';
 function Login({ user, setUser }) {
   const navigate = useNavigate();
 
-  const [username, setUsername] = useState("");
+  const [email, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handlePasswordChange = (event) => {
@@ -23,7 +23,7 @@ function Login({ user, setUser }) {
 
   const submitFunction = async (event) => {
     event.preventDefault();
-    if (username.length < 5) {
+    if (email.length < 8) {
       alert("Username must be at least 5 characters long.");
       return;
     }
@@ -33,20 +33,23 @@ function Login({ user, setUser }) {
       return;
     }
 
-    const userData = { username, password };
+    const userData = { email, password };
     console.log(userData)
-    // try {
-    //   const res = await axios.post("http://localhost:3001/api/auth/signin", userData);
-    //   setUser(res.data);
-    //   localStorage.setItem('user', JSON.stringify(res.data));
-    //   navigate('/dashboard');
-    // } catch (err) {
-    //   console.log(err);
-    // }
+    try {
+      const res = await axios.post("http://localhost:3001/auth/login", userData);
+      console.log(res.data)
+      setUser(res.data);
+      localStorage.setItem('user', JSON.stringify(res.data));
+      navigate('/dashboard');
+    } catch (err) {
+      console.log(err.response.data.message);
+      alert(err.response.data.message)
+    }
 
     setPassword("");
     setUsername("");
-    alert("Logged in successfully");
+    // alert("Logged in successfully");
+    // navigate('/dashboard');
   };
 
   return (
@@ -56,12 +59,12 @@ function Login({ user, setUser }) {
           <div className="text-3xl font-bold text-center text-purple-600 mb-6">Login</div>
           <div className="space-y-4">
             <div className="flex flex-col">
-              <label htmlFor="username" className="text-sm font-semibold">Username</label>
+              <label htmlFor="username" className="text-sm font-semibold">Email</label>
               <input
                 type="text"
-                placeholder="Enter your username"
-                value={username}
-                name="username"
+                placeholder="Enter your email"
+                value={email}
+                name="email"
                 onChange={handleUsernameChange}
                 className="input-login border-b-2 border-purple-600 py-2 px-3 focus:outline-none focus:border-purple-700 transition duration-300"
                 required

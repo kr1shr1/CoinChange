@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Card from 'react-bootstrap/Card';
 import { AiFillEdit, AiFillDelete } from 'react-icons/ai';
 import Modal from 'react-bootstrap/Modal';
@@ -11,18 +11,19 @@ const SavingCard = ({user,props,savingData,setSavingData,items,thememode,toggle,
   const [flag,setflag] = useState(false)
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-console.log(props._id)
+  useEffect(()=>{
+    console.log(props)
+  }, [props])
 
 // -------------- getting the  user data randomply ----------- 
 const percentage=Math.round((props.currAmt*100/props.targetAmt) * 100) / 100
-console.log(percentage)
+// console.log(percentage)
 const [SavingInput, setSavingInput] = useState({
   userId: user._id,
   title: '',
   currAmt: '',
   targetAmt: '',
 });
-console.log(savingData)
 const { title, currAmt, targetAmt } = SavingInput;
 
 // ----------------- handle edit ------------ 
@@ -39,12 +40,13 @@ const handleSavingInput = (name) => (e) => {
       try {
         let requestBody = {
           currAmt,
+          title
         };
 
         if (targetAmt !== '') {
           requestBody.targetAmt = targetAmt;
         }
-        const res = await axios.put(`http://localhost:3001/api/savings/editSaving/${props._id}`, {requestBody});
+        const res = await axios.put(`http://localhost:3001/savings/editSaving/${props._id}`, {requestBody});
         console.log(res.data);
         setSavingInput({
           userId: user._id,
@@ -55,7 +57,7 @@ const handleSavingInput = (name) => (e) => {
         setflag((prev)=>!(prev))
         setUpdateFlag(prev=>!prev)
       } catch (err) {
-        console.log(err);
+        console.log(err.response.data.message);
       }
     };
     editSavings();
@@ -63,10 +65,10 @@ const handleSavingInput = (name) => (e) => {
 
   const handleDelete = async()=>{
       try{
-          const res=await axios.delete(`http://localhost:3001/api/savings/deleteSaving/${props._id}`)
+          const res=await axios.delete(`http://localhost:3001/savings/deleteSaving/${props._id}`)
           console.log(res.data.saving)
-          const sav=res.data.saving
-          setSavingData(savingData.filter(data=>data._id!=sav._id))
+          // const sav=res.data.saving
+          // setSavingData(savingData.filter(data=>data._id!=sav._id))
 
       }catch(err){
           console.log(err)

@@ -1,6 +1,7 @@
 const express = require("express");
 const passport = require("passport");
 const router = express.Router();
+const bcrypt = require('bcrypt')
 const registerControl = require("../Controllers/register");
 require("../config/passport");
 
@@ -19,8 +20,10 @@ router.post(
           user.password
         );
         if (!isCorrect) {
+
           res.status(500).json({ message: "Incorrect password" });
         } else {
+          console.log(user)
           const { password, ...others } = user._doc;
           res.status(200).json(others);
         }

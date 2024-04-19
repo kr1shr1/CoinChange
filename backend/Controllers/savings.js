@@ -1,11 +1,13 @@
 const Savings = require("../models/savings");
 
 async function add(req, res) {
+    const { userId, targetAmt, Currency, currAmt, title} = req.body;
+    console.log(req.body.saving)
     try {
-        const { userId, targetAmt, currency, currAmt } = req.body;
-        const savingData = new Savings({ userId, targetAmt, currency, currAmt });
+        const savingData = new Savings(req.body.saving);
         await savingData.save();
-        res.status(200).json({ message: "Data Saved" });
+        console.log(savingData)
+        res.status(200).json({ message: "Data Saved", savingData });
     } catch (err) {
         console.error(err);
         return res.json({ message: "Server Error, addsaving" }).status(500);
@@ -15,7 +17,7 @@ async function add(req, res) {
 async function get(req, res) {
     const { userId } = req.params;
     try {
-        const savingDetail = await Savings.find({ userId: userId }, { userId: -1 });
+        const savingDetail = await Savings.find({ userId: userId });
         if (!savingDetail)
             return res.json({ message: "No saving found" });
         res.json({ savingDetail, message: "Saving data is fetched" }).status(200);
@@ -29,6 +31,7 @@ async function get(req, res) {
 
 async function edit(req, res) {
     const { id } = req.params;
+    console.log(req.body.requestBody)
     try {
         const editDetail = await Savings.findOneAndUpdate(
             { _id: id },

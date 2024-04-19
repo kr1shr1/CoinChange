@@ -91,18 +91,6 @@ const Dashboard = ({user,thememode,toggle,setUser}) => {
       setFilterInput({...filterInput,[name]:e.target.value})
 
 }
-  
-//   const handleChange = (e) => {
-//     // i18next.changeLanguage(e.target.value)
-//     setLang(e.target.value);
-//     i18next.changeLanguage(e.target.value).catch((err)=>{
-//       console.log(err)
-//     })
-//     // let loc = "http://localhost:3000/dashboard"
-//     // window.location.replace(
-//     //     loc + "?lng=" + e.target.value
-//     // );
-// };
 
 console.log("filters:",filterInput)
 // -----------------checking whether filter empty or not ------------------------- 

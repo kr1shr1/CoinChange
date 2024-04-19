@@ -2,10 +2,8 @@ const router = require('express').Router()
 const profile = require('../Controllers/profile')
 
 
-router.put('/addImg:id', profile.profileImage)
-router.get('/getInbox:userId',profile.getInbox)
-router.post('/addBadge:id', profile.addBadges)
-router.get('/getBadges:id', profile.getBadges)
+router.put('/addImg/:id', profile.profileImage)
+router.get('/getInbox/:userId',profile.getInbox)
 
 
 module.exports = router

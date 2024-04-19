@@ -34,9 +34,10 @@ const BillCard = ({ billflag,setbillflag,user,BillData,thememode }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const editBill = async () => {
+      console.log(BillInput, ' : Edit Bill' )
       try {
-        const res = await axios.put(`http://localhost:3001/api/bills/editBill/${BillData._id}`, { BillInput });
-        console.log(res.data);
+        const res = await axios.put(`http://localhost:3001/bill/editBill/${BillData._id}`, { BillInput });
+        console.log(res.data.message);
         setBillInput({
           userId: user._id,
         title: '',
@@ -57,8 +58,8 @@ const BillCard = ({ billflag,setbillflag,user,BillData,thememode }) => {
   const handleDelete = (id) => {
     const delBill = async (id) => {
       try {
-        const res = await axios.delete(`http://localhost:3001/api/bills/deleteBill/${id}`);
-        console.log(res.data);
+        const res = await axios.delete(`http://localhost:3001/bill/deleteBill/${id}`);
+        console.log(res.data.message);
         setbillflag((prev)=>!(prev))
       } catch (err) {
         console.log(err);

@@ -42,7 +42,6 @@ app.use(passport.session())
 
 
 //? Routes 
-app.use('/friend', require('./Routes/friends'))
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
@@ -51,6 +50,9 @@ app.use('/transaction', require('./Routes/trans'))
 app.use('/savings', require('./Routes/savings'))
 app.use('/bill', require('./Routes/bills'))
 app.use('/profile', require('./Routes/profile'))
+app.use('/friend', require('./Routes/friends'))
+app.use("/group",require('./Routes/group'))
+// app.use("/mail",mailroutes)
 
 
 

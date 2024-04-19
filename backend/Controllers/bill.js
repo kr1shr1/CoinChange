@@ -2,11 +2,10 @@ const Bill = require('../models/bills')
 
 
 async function add(req, res) {
+    const savingData = new Bill(req.body.dueItem);
     try {
-        const { userId, title, amount, toWhom, currency, recurring, duedate } = req.body;
-        const savingData = new Bill({ userId, title, amount, toWhom, currency, recurring, duedate });
         await savingData.save();
-        res.status(200).json({ message: "Data Saved" });
+        res.status(200).json({ message: "Data Saved" , savingData});
     } catch (err) {
         console.error(err);
         return res.json({ message: "Server Error, adding bill" }).status(500);
@@ -16,7 +15,7 @@ async function add(req, res) {
 async function get(req, res) {
     const { userId } = req.params;
     try {
-        const billDetail = await Bill.findOne({ userId: userId }, { userId: -1 });
+        const billDetail = await Bill.find({ userId: userId });
         if (!billDetail)
             return res.json({ message: "No bill found" });
         res.json({ billDetail, message: "Bill data is fetched" }).status(200);
