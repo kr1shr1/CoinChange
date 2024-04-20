@@ -1,55 +1,49 @@
 const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true
-  },
-  email: {
-    type: String,
-    required: true
-  },
-  password: {
-    type: String,
-    required: true,
-    min: 6
-  },
-  username:{
-    type: String,
-    required: true
-  },
-  date: {
-    type: Date,
-    default: Date.now
-  },
-  friends: {
-    type: [String]
-  },
-  sentRequest:{
-    type:[String]
-  },
-  recievedRequest:{
-    type: [String]
-  },
-  image:{
-    type: String,
-  },
-  inbox:{
-    type:[String],
-  },
-  badges:{
-    type:[String]
-  },
-  friends:{
-    type:[String]
-  },
-  sentRequests:{
-    type:[String]
-  },
-  receivedRequests:{
-    type:[String]
-},
-});
+    username:{
+        type:String,
+        required:true,
+        trim:true
+    },
+    name:{
+      type: String,
+      required: true
+    },
+    password:{
+        type:String,
+        trim:true
+    },
+    email:{
+        type:String,
+        required:true,
+        unique:true,
+        trim:true
+    },
+    groups:{
+        type:[String],
+    },
+    friends:{
+        type:[String]
+    },
+    sentRequests:{
+        type:[String]
+    },
+    receivedRequests:{
+        type:[String]
+    },
+    inbox:{
+        type:[String]
+    },
+    image:{
+        type: String,
+        default:null
+    },
+    badges:{
+        type:[String]
+    }
+})
+
 
 const User = mongoose.model('User', UserSchema);
 

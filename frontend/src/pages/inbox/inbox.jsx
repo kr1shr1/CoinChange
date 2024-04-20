@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Navbar from '../../Components/Navbar/Navbar';
 import axios from "axios"
 
-const Inbox = ({ user,setUser,thememode,toggle }) => {
+export default function Inbox({ user,setUser,thememode,toggle }){
  
 
   const [inboxuser,setinboxuser] = useState({})
@@ -78,5 +78,3 @@ useEffect(() => {
     </div>
   );
 };
-
-export default Inbox;

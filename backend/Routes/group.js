@@ -2,8 +2,8 @@ const express = require('express')
 const { creategroup,joingroup,getgroups,getmembers,splitBill, markPaid, markApproved,deleteGroup, simplifyDebt, approveDebt, getDebts,getgroup,addComment,getAllComments, addFriendsToGroup } = require("../Controllers/groups");
 
 const router = express.Router();
-router.post("/creategroup",creategroup)
-router.post("/joingroup",joingroup)
+router.post("/create",creategroup)
+router.post("/join",joingroup)
 router.put("/addfriendsgroup/:id",addFriendsToGroup)
 router.get("/getgroups/:id",getgroups)
 router.get("/getgroup/:id",getgroup)
@@ -14,7 +14,7 @@ router.put("/markapproved/:id",markApproved)
 router.post("/simplifyDebt/:id",simplifyDebt)
 router.post("/approveDebt/:id",approveDebt)
 router.get("/getDebts/:groupId",getDebts)
-router.delete("/deleteGroup/:id",deleteGroup)
+router.delete("/remove/:id",deleteGroup)
 router.post("/addcomment",addComment)
 router.get("/getcomments/:id",getAllComments)
 

@@ -9,7 +9,7 @@ const  creategroup= async(req,res)=>{
             req.body.groupInput
         );
     try {
-        console.log(userId)
+        console.log("userid 12: ", userId)
         newgroup.members.push(userId)
         const updatedgroup = await group.findByIdAndUpdate(
             newgroup._id,
@@ -41,15 +41,15 @@ const  getDebts= async(req,res)=>{
     console.log(err);
     }
 };
-
 const joingroup = async(req,res)=>{
-    const {userId,JoingCode} = req.body.joincode
+    // console.log(req.body.joinCode)
+    const {userId,JoingCode} = req.body.joinCode
     const existgroup = await group.findOne({groupCode:JoingCode});
     if (!existgroup) {
-        return res.status(404).json({ error: 'Group not found' });
+        return res.status(404).json({ message: 'Group not found' });
     }
     if (existgroup.members.includes(userId)) {
-        return res.status(400).json({ error: 'User is already a member of this group' });
+        return res.status(400).json({ message: 'User is already a member of this group' });
     }
     const newgroup = await group.findByIdAndUpdate(
             existgroup._id,
@@ -62,20 +62,14 @@ const joingroup = async(req,res)=>{
         { new: true }
     );
     const updatedGroup = await newgroup.save();
-    res.status(200).json(updatedGroup);
+    res.status(200).json({message: 'Joined to the group', existgroup})
 }
-
 const getgroups = async(req,res)=>{
     const userId= req.params.id;
-    // console.log(req.params.userId)
     try{
-        // const groups = await group.find({
-        //     $or:[
-        //     {members: { $in: userId }},{userId: userId},],})
         console.log(userId)
         const userr = await user.findById(userId)
         const allgroups = userr.groups
-        // res.json({allgroups})
         const groupDetails = await Promise.all(allgroups.map(async groupId => {
             const groupDetail = await group.findById(groupId);
             return groupDetail;
@@ -85,7 +79,6 @@ const getgroups = async(req,res)=>{
         console.log(err)
     }
 }
-
 const getmembers = async(req,res)=>{
     const groupId= req.params.id;
     // console.log(req.params.userId)
@@ -106,7 +99,6 @@ const getmembers = async(req,res)=>{
         console.log(err)
     }
 }
-
 const splitBill = async (req, res) => {
     const { amount, groupData } = req.body.input;
     const userr=req.body.input.user
@@ -197,7 +189,6 @@ const markApproved = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
-
 const simplifyDebt = async(req,res)=>{
     const debts = req.body.outputArray
     const id=req.params.id
@@ -216,10 +207,9 @@ const simplifyDebt = async(req,res)=>{
         res.json("unable to simplify")
     }
 }
-
 const deleteGroup = async (req, res) => {
+    const groupId = req.params.id;
     try {
-      const groupId = req.params.id;
       const groupToDelete = await group.findById(groupId);
       if (!groupToDelete) {
         return res.status(404).json({ error: "Group not found" });
@@ -244,8 +234,6 @@ const deleteGroup = async (req, res) => {
       res.status(500).json({ error: "Unable to delete group" });
     }
   };
-  
-
 const approveDebt = async (req, res) => {
     const id = req.params.id;
     const arr = req.body;

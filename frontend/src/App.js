@@ -7,12 +7,16 @@ import Login from './pages/Login/Login';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Dues from './pages/Dues/Dues.jsx'
 import Savings2 from './pages/Savings/Savings2.jsx'
+import Main from './pages/Groups/Main.jsx'
+import SimplifyDebt from './pages/Groups/SimplifyDebt.jsx';
+// import Grouphome from './pages/Groups/Grouphome.jsx';
+// import ToggleBtn from './Components/Navbar/ToggleBtn.jsx';
+import Inbox from './pages/inbox/inbox.jsx';
 
-import ToggleBtn from './Components/Navbar/ToggleBtn.jsx';
 
 function App() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")) || {});
-
+  const [groupData, setgroupData] = useState([])
   const [thememode, setThememode] = useState(localStorage.getItem('theme') || 'light');
 
   // console.log(isLoggedIn)
@@ -47,15 +51,14 @@ function App() {
           <Route path="/savings" element={<Savings2 user={user} thememode={thememode} toggle={toggle} />} />
           {/* <Route path="/transcard" element={<TransactionCard thememode={thememode} toggle={toggle}/>} /> */}
           {/* <Route path="/charts" element={<Chart user={user} setUser={setUser} thememode={thememode} toggle={toggle} />} /> */}
-          {/* <Route path="/groups" element={<Main user={user} thememode={thememode} toggle={toggle} groupData={groupData} setgroupData={setgroupData} />} /> */}
+          <Route path="/groups" element={<Main user={user} thememode={thememode} toggle={toggle}/>} />
           {/* <Route path="/billsplit/:id" element={<Grouphome user={user} thememode={thememode} toggle={toggle}/>}/> */}
-          {/* <Route path="/simplifydebt/:id" element={<SimplifyDebt user={user} thememode={thememode} toggle={toggle}/>}/>
-          <Route path="/btn" element={<ToggleBtn thememode={thememode} toggle={toggle}/>}/>
-          <Route path="/save" element={<Savings2 user={user} thememode={thememode} toggle={toggle} />} />
-          <Route path='/simplify' element={<SimplifyDebt user={user} thememode={thememode} toggle={toggle}/>}></Route>
-          <Route path="/profile" element={<Profile user={user} thememode={thememode} toggle={toggle} setUser={setUser}/>} />
-          <Route path="/billsplit" element={<Grouphome user={user} thememode={thememode} toggle={toggle}/>}/>
-          <Route path="/inbox" element={<Inbox user={user} setUser={setUser} thememode={thememode} toggle={toggle}/>} /> */}
+          <Route path="/simplifydebt/:id" element={<SimplifyDebt user={user} thememode={thememode} toggle={toggle}/>}/> 
+          {/* <Route path="/btn" element={<ToggleBtn thememode={thememode} toggle={toggle}/>}/> */}
+          {/* <Route path="/save" element={<Savings2 user={user} thememode={thememode} toggle={toggle} />} /> */}
+          {/* <Route path="/profile" element={<Profile user={user} thememode={thememode} toggle={toggle} setUser={setUser}/>} /> */}
+          {/* <Route path="/billsplit" element={<Grouphome user={user} thememode={thememode} toggle={toggle}/>}/> */}
+          <Route path="/inbox" element={<Inbox user={user} setUser={setUser} thememode={thememode} toggle={toggle}/>} /> 
       </Routes>
     </BrowserRouter>
   );

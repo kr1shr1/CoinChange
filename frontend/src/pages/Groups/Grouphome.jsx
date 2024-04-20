@@ -7,7 +7,7 @@ import axios from 'axios';
 import GroupCard from '../../Components/GroupCard/GroupCard.jsx';
 import { useParams } from 'react-router-dom';
 
-export const Grouphome = ({user,thememode,toggle}) => {
+const Grouphome = ({user,thememode,toggle}) => {
   const {id} = useParams()
   const [groupData,setgroupData]=useState([])
  

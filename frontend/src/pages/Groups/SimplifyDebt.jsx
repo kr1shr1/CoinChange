@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import Modal from 'react-bootstrap/Modal';
 
 
-const SimplifyDebt = ({user,thememode,toggle}) => {
+export default function SimplifyDebt ({user,thememode,toggle}) {
     console.log(user)
     const {id} = useParams()
   const [inputFields, setInputFields] = useState([]);
@@ -325,6 +325,4 @@ console.log(membersdata)
       </div>
     </div>
   );
-};
-
-export default SimplifyDebt;
+}
