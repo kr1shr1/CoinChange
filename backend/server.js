@@ -46,7 +46,7 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 app.use('/auth', require('./Routes/auth'))
-app.use('/transaction', require('./Routes/trans'))
+app.use('/trans', require('./Routes/trans'))
 app.use('/savings', require('./Routes/savings'))
 app.use('/bill', require('./Routes/bills'))
 app.use('/profile', require('./Routes/profile'))
@@ -90,5 +90,5 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.send('error2');
+  res.send('Error in connecting with the server');
 });

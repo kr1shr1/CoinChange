@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const transSchema = new mongoose.Schema({
     userId:{
         type:String,
+        required: true
     },
     type:{
         type:String,
@@ -16,8 +17,6 @@ const transSchema = new mongoose.Schema({
     },
     currency:{
         type:String,
-        required: true
-
     },
     category:{
         type:String,
@@ -27,7 +26,6 @@ const transSchema = new mongoose.Schema({
     },
     desc:{
         type:String,
-        required: true
 
     },
     date:{

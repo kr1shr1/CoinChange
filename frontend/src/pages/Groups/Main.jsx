@@ -101,6 +101,7 @@ export default function Main({ user, setUser, thememode, toggle}) {
       userId: user._id,
       title: '',
     });
+    handleGroupClose()
   };
 
   // Function to join group
@@ -155,6 +156,7 @@ export default function Main({ user, setUser, thememode, toggle}) {
               key={data._id}
               setGroupData={setGroupData}
               groupData={data}
+              allgroupsdata={groupData}
               setSelectedGroup={setSelectedGroup}
               selectedGroup={selectedGroup}
               thememode={thememode}
