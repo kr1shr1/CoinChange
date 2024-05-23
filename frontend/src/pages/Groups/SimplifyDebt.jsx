@@ -23,7 +23,7 @@ export default function SimplifyDebt({ user, thememode, toggle }) {
   const getgroup = async () => {
     try {
       //function to fetch group data
-      const res = await axios.get(`http://localhost:3001/api/group/getgroup/${id}`)
+      const res = await axios.get(`http://localhost:3001/group/getgroup/${id}`)
       console.log(res.data)
       setgroupData(res.data)
       console.log("use effect", groupData)
@@ -31,8 +31,6 @@ export default function SimplifyDebt({ user, thememode, toggle }) {
       console.log(err)
     }
   }
-
-  console.log(membersdata)
   //function to handle input
   const handleInputChange = (index, fieldName, value) => {
     const updatedInputFields = [...inputFields];
@@ -53,7 +51,7 @@ export default function SimplifyDebt({ user, thememode, toggle }) {
   //function for adding field
   const handleSubmit = (e) => {
     e.preventDefault();
-    // console.log(inputFields);
+    console.log(inputFields);
     const resultMap = inputFields.reduce((result, item) => {
       const key = item.paidBy;
 
@@ -78,7 +76,7 @@ export default function SimplifyDebt({ user, thememode, toggle }) {
     //function to simplify debts
     const simplify = async () => {
       try {
-        const res = await axios.post(`http://localhost:3001/api/group/simplifyDebt/${id}`, { outputArray })
+        const res = await axios.post(`http://localhost:3001/group/simplifyDebt/${id}`, { outputArray })
         console.log(res.data)
         const val = res.data
         setData(res.data)
@@ -93,7 +91,7 @@ export default function SimplifyDebt({ user, thememode, toggle }) {
     //function to fetch all debts
     const getdebts = async () => {
       try {
-        const res = await axios.get(`http://localhost:3001/api/group/getDebts/${id}`)
+        const res = await axios.get(`http://localhost:3001/group/getDebts/${id}`)
         console.log(res.data)
         if (res.data) setData(res.data)
       } catch (err) {
@@ -112,19 +110,12 @@ export default function SimplifyDebt({ user, thememode, toggle }) {
   //function to add comment
   const handleAddComment = async () => {
     try {
-      const res = await axios.post(`http://localhost:3001/api/group/addcomment`, {
+      const res = await axios.post(`http://localhost:3001/group/addcomment`, {
         userId: user._id,
         text: commentText,
         groupId: id,
         username: user.username
       });
-      console.log(res.data)
-      // socket.emit('comment', {
-      //   userId: user._id,
-      //   text: commentText,
-      //   groupId: id,
-      //   username: user.username,
-      // });
       setCommentText('')
       setcommentflag((prev) => !(prev))
     } catch (err) {
@@ -136,7 +127,7 @@ export default function SimplifyDebt({ user, thememode, toggle }) {
   //function to retrieve comments
   const getcomments = async () => {
     try {
-      const response = await axios.get(`http://localhost:3001/api/group/getcomments/${id}`);
+      const response = await axios.get(`http://localhost:3001/group/getcomments/${id}`);
       setComments(response.data.commentss);
       console.log(comments)
     } catch (error) {
@@ -146,29 +137,13 @@ export default function SimplifyDebt({ user, thememode, toggle }) {
   useEffect(() => {
     getcomments()
   }, [commentflag, comments.length])
-  // useEffect(()=>{
-  //   getcomments()
-  // },[comments.length])
-
-  // useEffect(() => {
-  //   // Listen for incoming comments from the server
-  //   socket.on('comment', (data) => {
-  //     setComments((prevComments) => [...prevComments, data]);
-  //   });
-
-  //   return () => {
-  //     // Clean up the socket connection when the component unmounts
-  //     socket.disconnect();
-  //   };
-  // }, [socket]);
 
 
   //function to retrieve members in a group
   useEffect(() => {
     const getMembers = async () => {
       try {
-        const res = await axios.get(`http://localhost:3001/api/group/getmembers/${id}`)
-        console.log(res.data)
+        const res = await axios.get(`http://localhost:3001/group/getmembers/${id}`)
         setmembersdata(res.data)
       } catch (err) {
         console.log(err)
@@ -190,7 +165,6 @@ export default function SimplifyDebt({ user, thememode, toggle }) {
   );
 
   useEffect(() => {
-
     getgroup()
   }, [])
 
@@ -224,15 +198,8 @@ export default function SimplifyDebt({ user, thememode, toggle }) {
 
 
       <div className='w-full flex justify-center bg-amber-500 dark:bg-[#282828] dark:text-white bg-[#cac8c8]'>
-        {/*              
-             <div className='flex-col'>
-             Group Members :
-              {membersdata?.map(data=>(
-               <div >{" "}{data.username}{" "}</div>
-               ))}
-               </div> */}
       </div>
-      <form onSubmit={handleSubmit} className=' p-3 mx-auto flex flex-col gap-3 justify-center'>
+      <form className=' p-3 mx-auto flex flex-col gap-3 justify-center'>
         {inputFields.map((field, index) => (
           <div className='flex justify-center gap-3 w-[40%] mx-auto rounded-lg ' >
             <div key={index} className='gap-3'>
@@ -276,7 +243,6 @@ export default function SimplifyDebt({ user, thememode, toggle }) {
 
         <div>
           <button type="submit" className='bg-[#8656cd] w-60 p-2 rounded-md text-white m-4 ' onClick={handleSubmit}>Simplify</button></div></div>
-      {/* List of all Debts */}
 
       {
         data?.map(debt => (
@@ -285,7 +251,7 @@ export default function SimplifyDebt({ user, thememode, toggle }) {
 
             {user.username == debt[1] && <button onClick={async () => {
               try {
-                const res = await axios.post(`http://localhost:3001/api/group/approveDebt/${id}`, debt)
+                const res = await axios.post(`http://localhost:3001/group/approveDebt/${id}`, debt)
                 setData(res.data.simplifyDebt)
                 console.log(res.data)
               } catch (err) {
