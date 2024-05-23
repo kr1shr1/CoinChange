@@ -317,21 +317,9 @@ useEffect(()=>{
     <div style={{backgroundColor:thememode=="dark"?"#181818":"#f0f0f0"}}>
       
         <Navbar thememode={thememode} toggle={toggle}/>
-        {/* --------------------------User monetary stats------------------------ */}
-        {/* <select onChange={(e)=> handleChange(e)}>
-                {languages.map((item) => {
-                    return (
-                        <option
-                            key={item.value}
-                            value={item.value}
-                        >
-                            {item.text}
-                        </option>
-                    );
-                })}
-            </select> */}
-      <div className='font-extrabold text-5xl mx-4 mt-4 underline underline-offset-3 decoration-[#8656cd] dark:text-[#f0f0f0]'>Welcome, {user.username}!</div>
-      <div className='mt-2 mx-4 text-gray-600 dark:text-gray-400'>Let's add some transactions!</div>
+      
+      <div className='font-extrabold text-5xl mx-4 mt-4 underline underline-offset-3 decoration-[#5cdd8d] dark:text-[green]'>Welcome, {user.username}!</div>
+      <div className='mt-2 mx-4 text-gray-600 dark:text-pink-400'>Let's add some transactions!</div>
 
      <div className='h-full flex flex-col justify-center items-start '>
        
@@ -520,9 +508,6 @@ useEffect(()=>{
         <Modal.Footer>
         </Modal.Footer>
       </Modal>
-      
-            
-             
         </div>
 
   )

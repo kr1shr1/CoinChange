@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "react-bootstrap";
-import SavingCard from "../../Components/cards/SavingCard";
+import SavingCard from "../../Components/cards/SavingCard.jsx";
 import axios from "axios";
 import Navbar from "../../Components/Navbar/Navbar";
 import "./Savings.css";
@@ -84,30 +84,6 @@ function Savings2({ user, setUser, thememode, toggle }) {
     setIsVisible(false);
   };
 
-  // const openModel = (itemId) => {
-  //   setEditItemId(itemId);
-  //   setIsVisible(true);
-  // };
-
-  //? Component to get the details of currency of that user
-  // const UCurrency=(currency)=>{
-  //   const [data, setData] = useState({})
-  //   useEffect(() => {
-  //     const fetchData = async () => {
-  //       try {
-  //         const response = await fetch(`https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/${currency}.json`);
-  //         const result = await response.json();
-  //         setData(result[currency]);
-  //       } catch (error) {
-  //         console.error('Error fetching currency data:', error);
-  //       }
-  //     };
-  //     fetchData();
-  //   }, [currency]);
-  //   useEffect(() => {
-  //     console.log(data); // Log the state after it has been updated
-  //   }, [data]);
-  //   return data
 
   const [currenci, setCurrenci] = useState("inr");
   const currenciData = currenci;
@@ -174,9 +150,11 @@ useEffect(() => {
           backgroundColor: thememode === "dark" ? "#181818" : "#f0f0f0",
         }}
       >
-        <div className="font-extrabold text-5xl mx-4 mt-4 underline underline-offset-8 decoration-[#8656cd] dark:text-[#f0f0f0]">
-          Savings Tracker
+        <div className="font-extrabold text-5xl mx-4 mt-4">
+          <span className="text-blue-500">Savings</span>{" "}
+          <span className="text-green-500">Tracker</span>
         </div>
+
         <div className="m-4 text-gray-600 dark:text-gray-400">
           Have any financial goals? Track them here!
         </div>
@@ -255,25 +233,25 @@ useEffect(() => {
                   required
                 >
                   <option>Select:</option>
-                  <option value="inr">inr</option>
-                  <option value="usd">usd</option>
-                  <option value="eur">eur</option>
-                  <option value="gbp">gbp</option>
-                  <option value="jpy">jpy</option>
-                  <option value="aud">aud</option>
-                  <option value="cad">cad</option>
-                  <option value="cny">cny</option>
-                  <option value="hkd">hkd</option>
-                  <option value="sgd">sgd</option>
-                  <option value="chf">chf</option>
-                  <option value="sek">sek</option>
-                  <option value="mxn">mxn</option>
+                  <option value="INR">INR</option>
+                  <option value="USD">USD</option>
+                  <option value="EUR">EUR</option>
+                  <option value="GBP">GBP</option>
+                  <option value="JPY">JPY</option>
+                  <option value="AUD">AUD</option>
+                  <option value="CAD">CAD</option>
+                  <option value="CNY">CNY</option>
+                  <option value="HKD">HKD</option>
+                  <option value="SGD">SGD</option>
+                  <option value="CHF">CHF</option>
+                  <option value="SEK">SEK</option>
+                  <option value="MXN">MXN</option>
                 </select>
               </div>
 
               <div className="savings-holder" onClick={addItem}>
                 <button
-                  className="rounded-md p-1 text-white w-full bg-[#8656cd]"
+                  className="rounded-md py-2 px-4 text-white w-40 bg-blue-500 hover:bg-blue-600 focus:outline-none"
                   onClick={handleAddSaving}
                 >
                   Add Saving
@@ -284,18 +262,19 @@ useEffect(() => {
             {/* Saving Cards list */}
             <div className="main-right flex flex-col justify-center items-start gap-5 h-[500px]">
               <div className="overflow-y-scroll w-full mt-2 rounded-md">
-                {savingData && savingData?.map((sav) => (
-                  <SavingCard
-                    user={user}
-                    props={sav}
-                    setSavingData={setSavingData}
-                    savingData={savingData}
-                    thememode={thememode}
-                    toggle={toggle}
-                    updateFlag={updateFlag}
-                    setUpdateFlag={setUpdateFlag}
-                  />
-                ))}
+                {savingData &&
+                  savingData?.map((sav) => (
+                    <SavingCard
+                      user={user}
+                      props={sav}
+                      setSavingData={setSavingData}
+                      savingData={savingData}
+                      thememode={thememode}
+                      toggle={toggle}
+                      updateFlag={updateFlag}
+                      setUpdateFlag={setUpdateFlag}
+                    />
+                  ))}
               </div>
             </div>
           </div>

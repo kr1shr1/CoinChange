@@ -1,38 +1,32 @@
 .savings-container {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
 }
 
-/* .header{       
-  height:70px;
-  width:100vw;
-  background-color: rgb(10, 107, 39);
-} */
-/* .toggle{
-  width:100px;
-  height:70%;
-  background-color: rgb(222, 140, 7);
-  text-align: center;
-} */
 .main-body {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: flex-start;
+    align-items: center;
     gap: 20px;
     padding: 15px;
     width: 100%;
-    /* height:700px; */
 }
 
 .main-head {
     display: flex;
-    font-style: bold;
+    font-weight: bold;
+    /* Changed from font-style */
     flex-direction: column;
     justify-content: space-evenly;
     gap: 10px;
     font-size: 25px;
+    color: #333;
+    background-color: #FFD700;
+    /* Gold */
+    padding: 10px;
+    border-radius: 10px;
 }
 
 .main-content {
@@ -40,28 +34,27 @@
     justify-content: space-evenly;
     align-items: center;
     width: 100%;
-    height: 600px;
-    /* gap:10px; */
+    height: auto;
+    gap: 10px;
 }
 
 .main-left {
     display: flex;
-    width: 50%;
-    height: 70%;
+    width: 100%;
+    /* Changed width to 100% */
+    height: auto;
     flex-direction: column;
     justify-content: space-evenly;
-    /* align-items: flex-start; */
     padding: 10px;
-    gap: 31px;
+    gap: 20px;
     align-items: flex-start;
 }
 
 .main-right {
-    width: 50%;
+    width: 100%;
+    /* Changed width to 100% */
     padding: 20px;
-
-    gap: 10px;
-    height: 500px;
+    height: auto;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -71,98 +64,83 @@
 .savings-holder {
     width: 100%;
     font-size: 20px;
+    color: #333;
 }
 
 .saving-input {
-    padding: 5px;
+    padding: 10px;
     text-align: left;
     width: 100%;
+    border: 2px solid #FFD700;
+    /* Gold */
+    border-radius: 8px;
 }
 
-
 .savings-box {
-    border-radius: 30px;
-    background-color: rgb(185, 216, 185);
+    border-radius: 20px;
+    background-color: #20B2AA;
+    /* Light Sea Green */
     width: 100%;
-    /* text-align: center; */
-    height: 100px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 5px;
+    height: auto;
+    display: grid;
+    /* Changed from flex to grid */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    /* Responsive grid */
+    gap: 20px;
+    /* Increased gap for better spacing */
+    padding: 10px;
 }
 
 .box-header {
-    background-color: rgb(201, 189, 189);
-    display: flex;
-    justify-content: center;
+    background-color: #FF4500;
+    /* Orange Red */
+    color: #FFF;
+    /* White */
+    padding: 8px;
+    border-radius: 10px;
 }
 
 .box-body {
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
     width: 100%;
 }
 
-.box-left {
-    width: 70%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    padding: 10px;
-}
-
+.box-left,
 .box-right {
-
+    width: 100%;
+    /* Changed width to 100% */
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     gap: 10px;
     padding: 10px;
-
 }
 
-.edit-btn {
-    width: 100%;
-}
-
+.edit-btn,
 .btn {
     width: 100%;
     border-radius: 20px;
-    padding: 7px;
-    background-color: rgb(0, 145, 0);
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.edit-btn:hover,
+.btn:hover {
+    filter: brightness(1.2);
+    /* Increased brightness on hover */
 }
 
 .input-range {
-    background-color: green;
+    background-color: #FF4500;
+    /* Orange Red */
     height: 5px;
-    width: 70%;
-}
-
-.box-right {
-    width: 30%;
-}
-
-
-.minus {
-    display: flex;
-    justify-content: flex-end;
-    height: 30px;
-}
-
-.input-amount {
     width: 100%;
-
-}
-
-.input-A {
-    width: 100%;
+    border-radius: 5px;
 }
 
 .model-button {
@@ -176,18 +154,23 @@
 .model-br {
     width: 50%;
     text-align: center;
-    background-color: rgb(50, 110, 50);
+    background-color: #FF6347;
+    /* Tomato */
     border-radius: 20px;
+    padding: 8px;
+    color: #FFF;
+    /* White */
 }
 
 .model {
-
-    scale: 0;
+    transform: scale(0);
+    /* Corrected 'scale' property */
     position: fixed;
     top: 50%;
     left: 50%;
-    translate: -50% -50%;
-    border: 2px solid #e9e5e859;
+    transform: translate(-50%, -50%);
+    /* Corrected 'translate' property */
+    border: 2px solid rgba(0, 0, 0, 0.2);
     box-sizing: border-box;
     width: 500px;
     height: 400px;
@@ -197,33 +180,53 @@
     justify-content: space-evenly;
     flex-direction: column;
     align-items: center;
-    backdrop-filter: 6px;
-    background: #2bb20288;
+    backdrop-filter: blur(6px);
+    background: rgba(0, 0, 0, 0.5);
     z-index: 1;
 }
 
 .model.visible {
-    scale: 1;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    translate: -50% -50%;
-    border: 2px solid #e9e5e859;
-    box-sizing: border-box;
-    width: 500px;
-    height: 400px;
-    display: flex;
-    padding: 10px;
-    border-radius: 20px;
-    justify-content: space-evenly;
-    flex-direction: column;
-    align-items: center;
-    backdrop-filter: 6px;
-    background: #2bb20288;
-    z-index: 1;
-
+    transform: scale(1);
+    /* Corrected 'scale' property */
 }
 
 .hi {
-    background-color: rgb(92, 230, 7);
+    background-color: #FF6347;
+    
+    color: #FFF;
+    
+    border-radius: 8px;
+    padding: 10px;
+}
+
+/* Style for the select box */
+.currency-select {
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    appearance: none;
+    /* Remove default dropdown arrow */
+    background-color: #f8f8f8;
+    width: 200px;
+    /* Adjust width as needed */
+    cursor: pointer;
+}
+
+/* Style for each option */
+.currency-select option {
+    padding: 10px;
+    font-size: 16px;
+    color: #333;
+    background-color: #fff;
+    transition: background-color 0.3s ease;
+}
+
+.currency-select option:hover {
+    background-color: #e0e0e0;
+}
+
+.currency-select option:first-child {
+    color: #999;
+    font-style: italic;
 }

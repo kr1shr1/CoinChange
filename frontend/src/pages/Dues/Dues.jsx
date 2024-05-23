@@ -65,11 +65,7 @@ function Dues({ user, thememode, toggle }) {
   // ----------------------- Submit -------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log("Currency data:", currenciData);
-    // console.log(currenciData[dueItem.currency]);
-    // dueItem.amount = Math.floor(
-    //   dueItem.amount / currenciData[dueItem.currency]
-    // );
+   
     console.log(dueItem);
     try {
       const res = await axios.post("http://localhost:3001/bill/addBill", {
@@ -79,22 +75,6 @@ function Dues({ user, thememode, toggle }) {
       console.log(res.data.savingData.message);
       alert(res.data.message)
 
-      //! Sending mail recuuring frontend to backend call
-      // const val = res.data.bill;
-      // setBillData((prev) => [...prev, val]);
-    //   mailsendstart();
-    //   const currdate = new Date();
-    //   const dueDateStr = dueItem.dueDate;
-    //   const duedate = new Date(dueDateStr);
-    //   const oneDayInMillis = 24 * 60 * 60 * 1000;
-    //   if (
-    //     currdate.getFullYear() === duedate.getFullYear() &&
-    //     currdate.getMonth() === duedate.getMonth() &&
-    //     currdate.getDate() === duedate.getDate() &&
-    //     currdate.getTime() + oneDayInMillis === duedate.getTime()
-    //   ) {
-    //     mailsendrecurring(dueItem.recurring);
-    //   }
 
       setdueItem({
         title: "",
@@ -126,31 +106,6 @@ function Dues({ user, thememode, toggle }) {
   }, [billflag]);
 
 
-  //! to get the currency detail but why ?
-  // const UCurrency = (currency) => {
-  //   const [data, setData] = useState({});
-  //   useEffect(() => {
-  //     const fetchData = async () => {
-  //       try {
-  //         const response = await fetch(
-  //           `https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/${currency}.json`
-  //         );
-  //         const result = await response.json();
-  //         setData(result[currency]);
-  //       } catch (error) {
-  //         console.error("Error fetching currency data:", error);
-  //       }
-  //     };
-  //     fetchData();
-  //   }, []);
-  //   useEffect(() => {
-  //     console.log(data); // Log the state after it has been updated
-  //   }, []);
-  //   return data;
-  // };
-  // const [currenci, setCurrenci] = useState("inr");
-  // const currenciData = UCurrency(currenci);
-
   return (
     <>
       <Navbar thememode={thememode} toggle={toggle} />
@@ -158,9 +113,9 @@ function Dues({ user, thememode, toggle }) {
         <div className="font-extrabold text-5xl mx-4 mt-4 underline underline-offset-8 text-purple-600 dark:text-gray-200">
           Bills and Dues
         </div>
-        <div className="mx-4 text-gray-600 dark:text-gray-400">
+        <div className="mx-4 text-gray-600 dark:text-gray-400 mt-2">
           Manage your recurring bills and dues here. Receive reminders through
-          email
+          e\mail.
         </div>
 
         <div className="hero-section h-full">
@@ -250,7 +205,7 @@ function Dues({ user, thememode, toggle }) {
                 id="currency"
                 value={dueItem.currency}
                 onChange={handleBillInput("currency")}
-                className="w-[33rem] p-2 bg-gray-100 dark:bg-gray-700 rounded-md text-gray-800 dark:text-gray-400"
+                className="w-[70%] p-2 bg-gray-100 dark:bg-gray-700 rounded-md text-gray-800 dark:text-gray-400"
                 required
               >
                 <option>Select:</option>
@@ -271,8 +226,8 @@ function Dues({ user, thememode, toggle }) {
             </div>
 
             <div className="due flex justify-between w-full gap-4">
-              <label htmlFor="recurring" className="text-black dark:text-white">
-                Recurring
+              <label htmlFor="recurring" className="text-black dark:text-white mt-2">
+                Recurring:
               </label>
               <select
                 name="recurring"
@@ -280,7 +235,7 @@ function Dues({ user, thememode, toggle }) {
                 required
                 value={dueItem.recurring}
                 onChange={handleBillInput("recurring")}
-                className="w-[70%] p-2 bg-gray-100 dark:bg-gray-700 rounded-md text-gray-800 dark:text-gray-400"
+                className="w-[70%] p-2 bg-gray-100 dark:bg-gray-700 rounded-md text-gray-800 dark:text-gray-400 mt-2"
               >
                 <option value="">Select</option>
                 <option value="daily">Daily</option>
