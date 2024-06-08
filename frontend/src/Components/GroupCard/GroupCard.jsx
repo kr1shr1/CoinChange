@@ -36,25 +36,25 @@ const GroupCard = ({
     );
 
     setCheckedState(updatedCheckedState);
-  };
+    const updatedFriends = user.friends.filter((friend, index) =>
+      updatedCheckedState[index]
+    );
 
-  useEffect(() => {
-    checkedState.map((item, index) => {
-      if (item == true) setFriends((prev) => [...prev, user.friends[index]]);
-    });
-  }, [checkedState]);
+    setFriends(updatedFriends);
+  };
 
   //! Checked friends are send to join the group
   const handleAddFriendsToGroup = async () => {
+    console.log(friends);
     try {
-      console.log(friends);
       const res = await axios.put(
-        `http://localhost:3001/api/group/addfriendsgroup/${groupData._id}`,
+        `http://localhost:3001/group/addfriend/${groupData._id}`,
         { friends }
       );
-      console.log(res.data);
+      alert(res.data.message);
+      setShowAddFriend(false);
     } catch (err) {
-      console.log(err);
+      console.log(err.response.data);
     }
   };
   const [copied, setCopied] = useState(false);
@@ -77,14 +77,11 @@ const GroupCard = ({
       );
       console.log(res);
       alert(res.data.message)
-      // const sav = res.data.groupp;
-      // setgroupData(allgroupsdata.filter((data) => data._id != sav._id));
+      const delgroup = res.data.groupp;
+      setgroupData(allgroupsdata.filter((data) => data._id != delgroup._id));
     } catch (err) {
       console.log(err);
     }
-  };
-  const handlePaid = () => {
-    console.log("clicked");
   };
   return (
     <div className="flex justify-center items-center card-parent h-full p-1">

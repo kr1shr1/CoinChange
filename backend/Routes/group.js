@@ -4,7 +4,7 @@ const { creategroup,joingroup,getgroups,getmembers,splitBill, markPaid, markAppr
 const router = express.Router();
 router.post("/create",creategroup)
 router.post("/join",joingroup)
-router.put("/addfriendsgroup/:id",addFriendsToGroup)
+router.put("/addfriend/:id",addFriendsToGroup)
 router.get("/getgroups/:id",getgroups)
 router.get("/getgroup/:id",getgroup)
 router.get("/getmembers/:id",getmembers)

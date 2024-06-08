@@ -93,7 +93,7 @@ const SavingCard = ({
   return (
     <div className="container mx-auto">
       <div className="card mt-8 shadow-lg">
-        <div className="card-header bg-yellow-400">
+        <div className="card-header bg-green-300">
           <h5 className="font-semibold text-center text-lg">
             Title - {props.title}
           </h5>

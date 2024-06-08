@@ -34,21 +34,21 @@ async function sentRequest(req, res) {
 
 }
 async function acceptRequest(req, res) {
+    const friend = req.body.friendName
+    const {userId} = req.params
     try {
-        const {userId} = req.body.userid
-        const username = user.findById(userId).exec().username
-        const friend = req.body.friendUsername
-        const friendDocument =  user.findOne({ username : friend})
-
+        const usser =  await user.findById(userId)
+        const friendDocument = await user.findOne({ username : friend})
+        const username = usser.username
         if(!friendDocument) return res.json({message : "Enter valid User Detail"})
         if(friendDocument.friends.includes(username)) return res.json({message: "Already Friends"})
+        console.log('user: ', usser)
+        console.log('friend: ', friendDocument)
 
-
-        const acceptingFriend = await user.findByIdAndUpdate(userId, { $push: { friends: friend }, $pull: { receivedRequests: friendName } }, {new: true });
+        const acceptingFriend = await user.findByIdAndUpdate(userId, { $push: { friends: friend }, $pull: { receivedRequests: friend } }, {new: true });
         const updateWaitingList = await user.findByIdAndUpdate(friendDocument._id, {$push:{friends: username, inbox:`${username} accepted your friend request`}, $pull:{sentRequest: username}}, {new: true});
 
         res.json({acceptingFriend, updateWaitingList, message: 'Friend Request Accepted'})
-        //?Again inbox feature not implemented
     } catch (err) {
         console.log(err, 'error with the accepting the request');
         return res.status(500).json({ error: "Internal Server Error" });

@@ -9,32 +9,86 @@
     /* Parent container for flex items */
     .d-parent {
         display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: space-between;
+        flex-direction: column;
         align-items: center;
-        background-color: orange;
+        background-color: #f0f0f0;
         padding: 20px;
         border-radius: 10px;
     }
 
-  
+    /* Individual flex items */
     .chill {
-        width: calc(50% - 20px);
+        width: 100%;
         margin-bottom: 20px;
     }
 
-   
+    /* Filters container */
     .filter {
         width: 100%;
+        margin-bottom: 20px;
     }
 
-   
+    /* Category dropdown */
     .category-all {
+        width: calc(50% - 10px);
+        margin-right: 10px;
+    }
+
+    /* Export button */
+    .export-dashboard {
+        width: calc(50% - 10px);
+        margin-left: 10px;
+    }
+
+    /* Dashboard statistics */
+    .dashboard-stats {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    /* Transaction cards container */
+    .transaction-cards {
         width: 100%;
     }
 
-    .export-dashboard {
-        width: 100%;
+    /* Transaction card */
+    .transaction-card {
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    /* Transaction card title */
+    .transaction-card-title {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+
+    /* Transaction card details */
+    .transaction-card-details {
+        font-size: 1rem;
+        color: #666;
+    }
+
+    /* Add transaction button */
+    .add-transaction-button {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #8656cd;
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        font-size: 2rem;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .add-transaction-button:hover {
+        background-color: #6c419d;
     }
 }
