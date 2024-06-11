@@ -96,14 +96,14 @@ function Dues({ user, thememode, toggle }) {
         const res = await axios.get(
           `http://localhost:3001/bill/getBill/${user._id}`
         );
-        console.log(res.data.billDetail);
+        // console.log(res.data.billDetail);
         setBillData(res.data.billDetail);
       } catch (err) {
         console.log(err.resposne.data.message);
       }
     };
     getBills();
-  }, [billflag]);
+  }, [billflag, dueItem]);
 
 
   return (
@@ -115,7 +115,7 @@ function Dues({ user, thememode, toggle }) {
         </div>
         <div className="mx-4 text-gray-600 dark:text-gray-400 mt-2">
           Manage your recurring bills and dues here. Receive reminders through
-          e\mail.
+          email.
         </div>
 
         <div className="hero-section h-full">

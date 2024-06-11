@@ -190,13 +190,13 @@ const Dashboard = ({ user, thememode, toggle, setUser }) => {
 
   return (
     <div
-      style={{ backgroundColor: thememode === "dark" ? "#181818" : "#f0f0f0" }}
+    className="bg-gray-800"
     >
       <Navbar thememode={thememode} toggle={toggle} />
-      <div className="font-extrabold text-5xl mx-4 mt-4 underline underline-offset-3 decoration-[#8656cd] dark:text-[#8f3333]">
+      <div className="font-extrabold text-5xl mx-4 mt-4 underline underline-offset-3 decoration-slate-400 text-white">
         Welcome, {user.username}!
       </div>
-      <div className="mt-2 mx-4 text-gray-600 dark:text-gray-400">
+      <div className="mt-2 mb-2 mx-4 text-gray-600 dark:text-gray-400 text-2xl">
         Let's add some transactions!
       </div>
       <div className="h-full flex flex-col justify-center items-start ">
