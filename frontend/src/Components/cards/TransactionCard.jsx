@@ -88,7 +88,7 @@ const TransactionCard = ({
       >
         <Card.Header
           className="font-bold text-xl"
-          style={{ backgroundColor: thememode == "dark" ? "#3a3a3a" : "white" }}
+          style={{ backgroundColor:  "#3a3a3a"  }}
         >
           {" "}
           Category :- {transactionData.category}

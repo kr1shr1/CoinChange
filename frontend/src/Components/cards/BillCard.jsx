@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
-import Card from 'react-bootstrap/Card';
-import { AiFillEdit, AiFillDelete } from 'react-icons/ai';
-import Modal from 'react-bootstrap/Modal';
-import axios from 'axios';
-import { Button } from 'react-bootstrap';
-import { AiTwotoneCalendar } from 'react-icons/ai';
-
+import React, { useState } from "react";
+import Card from "react-bootstrap/Card";
+import { AiFillEdit, AiFillDelete, AiTwotoneCalendar } from "react-icons/ai";
+import Modal from "react-bootstrap/Modal";
+import axios from "axios";
+import { Button } from "react-bootstrap";
 
 const BillCard = ({ billflag, setbillflag, user, BillData, thememode }) => {
   const [show, setShow] = useState(false);
@@ -20,22 +18,29 @@ const BillCard = ({ billflag, setbillflag, user, BillData, thememode }) => {
 
   const { title, amount, toWhom, dueDate } = BillInput;
 
-  {
-    /*-----------------function to handle the bill's input8--------*/
-  }
+  // Function to handle the bill's input
   const handleBillInput = (name) => (e) => {
     setBillInput({ ...BillInput, [name]: e.target.value });
   };
 
-  // -------------- handling the closing and opening of edit -------------
+  // Handling the closing and opening of edit modal
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleShow = () => {
+    setBillInput({
+      userId: user._id,
+      title: BillData.title,
+      dueDate: BillData.dueDate,
+      amount: BillData.amount,
+      toWhom: BillData.toWhom,
+      recurring: BillData.recurring,
+    });
+    setShow(true);
+  };
 
-  // --------------funtion to handle the submitting the edit data ---------------------
+  // Function to handle submitting the edit data
   const handleSubmit = (e) => {
     e.preventDefault();
     const editBill = async () => {
-      console.log(BillInput, " : Edit Bill");
       try {
         const res = await axios.put(
           `http://localhost:3001/bill/editBill/${BillData._id}`,
@@ -51,6 +56,7 @@ const BillCard = ({ billflag, setbillflag, user, BillData, thememode }) => {
           recurring: "",
         });
         setbillflag((prev) => !prev);
+        handleClose();
       } catch (err) {
         console.log(err);
       }
@@ -58,8 +64,15 @@ const BillCard = ({ billflag, setbillflag, user, BillData, thememode }) => {
     editBill();
   };
 
-  // ----------------  handling the delete function --------------------
+  // Handling the delete function with confirmation
   const handleDelete = (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this bill?"
+    );
+    if (!confirmDelete) {
+      return;
+    }
+
     const delBill = async (id) => {
       try {
         const res = await axios.delete(
@@ -74,11 +87,10 @@ const BillCard = ({ billflag, setbillflag, user, BillData, thememode }) => {
     delBill(id);
   };
 
-  //function to track past due payments
+  // Function to track past due payments
   const paymentTime = () => {
     let duedate = new Date(BillData.dueDate);
     let currDate = new Date();
-
     return currDate > duedate;
   };
 
@@ -138,6 +150,7 @@ const BillCard = ({ billflag, setbillflag, user, BillData, thememode }) => {
             name={"amount"}
             onChange={handleBillInput("amount")}
             required
+            className="form-control"
           />
 
           <label htmlFor="person" style={{ color: "#333333" }}>
@@ -149,6 +162,7 @@ const BillCard = ({ billflag, setbillflag, user, BillData, thememode }) => {
             value={toWhom}
             onChange={handleBillInput("toWhom")}
             required
+            className="form-control"
           />
 
           <label htmlFor="title" style={{ color: "#333333" }}>
@@ -160,6 +174,7 @@ const BillCard = ({ billflag, setbillflag, user, BillData, thememode }) => {
             value={title}
             onChange={handleBillInput("title")}
             required
+            className="form-control"
           />
 
           <label htmlFor="date" style={{ color: "#333333" }}>
@@ -171,6 +186,7 @@ const BillCard = ({ billflag, setbillflag, user, BillData, thememode }) => {
             value={dueDate}
             onChange={handleBillInput("dueDate")}
             required
+            className="form-control"
           />
         </Modal.Body>
         <Modal.Footer>

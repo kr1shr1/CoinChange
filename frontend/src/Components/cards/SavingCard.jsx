@@ -105,7 +105,7 @@ const SavingCard = ({
                 Current Amount: <span className="text-xl">{props.currAmt}</span>
               </p>
               <p className="text-lg">
-                Goal Amount: <span className="text-xl">{props.currAmt}</span>
+                Goal Amount: <span className="text-xl">{props.targetAmt}</span>
               </p>
             </div>
             <div className="w-1/2">
@@ -143,7 +143,7 @@ const SavingCard = ({
       >
         <div className="modal-dialog" role="document">
           <div className="modal-content">
-            <div className="modal-header">
+            <div className="modal-header bg-primary text-white">
               <h5 className="modal-title">Edit Transaction</h5>
               <button
                 type="button"
@@ -156,7 +156,9 @@ const SavingCard = ({
               </button>
             </div>
             <div className="modal-body">
-              <label htmlFor="title">Title:</label>
+              <label htmlFor="title" className="text-white">
+                Title:
+              </label>
               <input
                 type="text"
                 name="title"
@@ -165,7 +167,9 @@ const SavingCard = ({
                 required
                 className="form-control"
               />
-              <label htmlFor="currAmt">Current Amount:</label>
+              <label htmlFor="currAmt" className="text-white">
+                Current Amount:
+              </label>
               <input
                 type="text"
                 name="currAmt"
@@ -174,7 +178,9 @@ const SavingCard = ({
                 required
                 className="form-control"
               />
-              <label htmlFor="targetAmt">Goal Amount:</label>
+              <label htmlFor="targetAmt" className="text-white">
+                Goal Amount:
+              </label>
               <input
                 type="text"
                 name="targetAmt"
