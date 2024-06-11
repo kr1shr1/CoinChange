@@ -189,7 +189,7 @@ const Dashboard = ({ user, thememode, toggle, setUser }) => {
   };
 
   return (
-    <div className="bg-gray-800">
+    <div className="bg-gray-900">
       <Navbar />
       <div className="font-extrabold text-5xl mx-4 mt-4 underline underline-offset-3 decoration-slate-400 text-white">
         Welcome, {user.username}!
@@ -294,122 +294,124 @@ const Dashboard = ({ user, thememode, toggle, setUser }) => {
         +
       </button>
       <Modal show={show} onHide={handleClose} animation={false} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Add Transaction</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {/* Add transaction input section */}
-          <label htmlFor="type">Transaction type: </label>
-          <select
-            name="type"
-            id="type"
-            value={type}
-            onChange={handleTransInput("type")}
-            className="px-1 border-1 py-1 mx-2 rounded-md"
-            required
-          >
-            <option value="">Select</option>
-            <option value="expense">Expense</option>
-            <option value="income">Income</option>
-          </select>
-          <br />
-          <label htmlFor="currency">Currency: </label>
-          <select
-            name="currency"
-            id="currency"
-            value={currency}
-            onChange={handleTransInput("currency")}
-            className="px-1 border-1 py-1 mx-2 rounded-md"
-            required
-          >
-            <option value="inr">inr</option>
-            <option value="usd">usd</option>
-            <option value="eur">eur</option>
-            <option value="gbp">gbp</option>
-            <option value="jpy">jpy</option>
-            <option value="aud">aud</option>
-            <option value="cad">cad</option>
-            <option value="cny">cny</option>
-            <option value="hkd">hkd</option>
-            <option value="sgd">sgd</option>
-            <option value="chf">chf</option>
-            <option value="sek">sek</option>
-            <option value="mxn">mxn</option>
-          </select>
-          <br />
-          <label htmlFor="amount">Amount: </label>
-          <input
-            type="number"
-            name={"amount"}
-            value={amount}
-            onChange={handleTransInput("amount")}
-            required
-          ></input>
-          <label htmlFor="category">Category: </label>
-          <input
-            name={"category"}
-            type="text"
-            value={category}
-            onChange={handleTransInput("category")}
-            required
-          ></input>
-          <label htmlFor="desc">Description:</label>
-          <input
-            type="text"
-            name={"desc"}
-            value={desc}
-            onChange={handleTransInput("desc")}
-          ></input>
-          <label htmlFor="date">Date:</label>
-          <input
-            type="date"
-            name={"date"}
-            value={date}
-            onChange={handleTransInput("date")}
-            required
-          ></input>
-        </Modal.Body>
-        <Modal.Footer>
+        <Modal.Header className="bg-[#e2e8f0]">
+          <Modal.Title className="text-xl font-bold text-[#1b263b]">
+            Add Transaction
+          </Modal.Title>
           <button
-            className="bg-[#8656cd] p-2 rounded-md text-white"
+            type="button"
+            className="absolute top-0 right-0 mt-2 mr-2 text-black bg-gray-300 hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 rounded-full p-2"
+            onClick={handleClose}
+          >
+            <span aria-hidden="true" className="text-bold rounded-full">
+              x
+            </span>
+          </button>
+        </Modal.Header>
+        <Modal.Body className="bg-[#e2e8f0] text-[#1b263b] p-4 space-y-1">
+          {/* Add transaction input section */}
+          <div>
+            <label htmlFor="type" className="block font-medium text-[#1b263b]">
+              Transaction Type
+            </label>
+            <select
+              name="type"
+              id="type"
+              value={type}
+              onChange={handleTransInput("type")}
+              className="w-full px-3 py-2 border border-gray-300 bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            >
+              {/* <option value="">Select</option> */}
+              <option value="expense">Expense</option>
+              <option value="income">Income</option>
+            </select>
+          </div>
+          <div>
+            <label
+              htmlFor="currency"
+              className="block font-medium text-[#1b263b]"
+            >
+              Currency
+            </label>
+            <select
+              name="currency"
+              id="currency"
+              value={currency}
+              onChange={handleTransInput("currency")}
+              className="w-full px-3 py-2 border border-gray-300 bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            >
+              <option value="inr">INR</option>
+            </select>
+          </div>
+          <div>
+            <label
+              htmlFor="amount"
+              className="block font-medium text-[#1b263b]"
+            >
+              Amount
+            </label>
+            <input
+              type="number"
+              name="amount"
+              value={amount}
+              onChange={handleTransInput("amount")}
+              className="w-full px-3 py-2 border border-gray-300 bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="category"
+              className="block font-medium text-[#1b263b]"
+            >
+              Category
+            </label>
+            <input
+              name="category"
+              type="text"
+              value={category}
+              onChange={handleTransInput("category")}
+              className="w-full px-3 py-2 border border-gray-300 bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="desc" className="block font-medium text-[#1b263b]">
+              Description
+            </label>
+            <input
+              type="text"
+              name="desc"
+              value={desc}
+              onChange={handleTransInput("desc")}
+              className="w-full px-3 py-2 border border-gray-300 bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <label htmlFor="date" className="block font-medium text-[#1b263b]">
+              Date
+            </label>
+            <input
+              type="date"
+              name="date"
+              value={date}
+              onChange={handleTransInput("date")}
+              className="w-full px-3 py-2 border border-gray-300 bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+        </Modal.Body>
+        <Modal.Footer className="bg-[#e2e8f0] flex justify-end">
+          <button
+            className="bg-[#1b263b] px-4 py-2 rounded-md text-white font-semibold hover:bg-[#2e4266] focus:outline-none focus:ring-2 focus:ring-blue-500"
             onClick={handleSubmit}
             required
           >
             Save
           </button>
         </Modal.Footer>
-      </Modal>
-      <Modal
-        show={incomeShow}
-        onHide={handleIncomeClose}
-        animation={false}
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>
-            Congratulations! You are rewarded with a Badge!
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <img src="BadeLog.png" alt="Badge Image" className="w-100" />
-        </Modal.Body>
-        <Modal.Footer></Modal.Footer>
-      </Modal>
-      <Modal
-        show={expenseShow}
-        onHide={handleExpenseClose}
-        animation={false}
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>
-            Congratulations! You are rewarded with a Badge!
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <img src="AAKR.png" alt="Badge Image" className="w-100" />
-        </Modal.Body>
-        <Modal.Footer></Modal.Footer>
       </Modal>
     </div>
   );
