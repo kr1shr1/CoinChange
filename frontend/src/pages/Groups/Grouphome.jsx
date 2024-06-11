@@ -65,16 +65,6 @@ const Grouphome = ({ user, thememode, toggle }) => {
     }
   };
 
-  // const handlePaid = async()=>{
-  //   try{
-  //     const res=await axios.put(`http://localhost:3001/api/group/markpaid/${groupData._id}`,{userId:id})
-  //     setPaid(prev=>!prev)
-
-  //     console.log(res.data)
-  //   }catch(err){
-  //     console.log(err)
-  //   }
-  // }
 
   //function to fetch group data
   const getgroup = async () => {

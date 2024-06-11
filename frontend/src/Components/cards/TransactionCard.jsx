@@ -81,49 +81,34 @@ const TransactionCard = ({
 
   return (
     <div>
-      <Card
-        variant="light"
-        border="secondary"
-        className="mx-4 my-4 dark:text-white"
-      >
-        <Card.Header
-          className="font-bold text-xl"
-          style={{ backgroundColor: thememode == "dark" ? "#3a3a3a" : "white" }}
-        >
-          {" "}
-          Category :- {transactionData.category}
-        </Card.Header>
-        <Card.Body
-          style={{ backgroundColor: thememode == "dark" ? "#282828" : "white" }}
-        >
-          <div className="flex justify-between items-center">
-            <Card.Text
-              className="text-md align-middle items-center my-1"
-              style={{
-                color: transactionData.type == "expense" ? "red" : "green",
-              }}
-            >
-              {" "}
-              Amount :- &#8377; {transactionData.amount}
-            </Card.Text>
-            <div className="flex justify-between gap-2">
-              <AiFillEdit onClick={handleShow} style={{ cursor: "pointer" }} />
-              <AiFillDelete
-                onClick={() => {
-                  handleDelete(transactionData._id);
-                }}
-                style={{ cursor: "pointer" }}
-              />
-            </div>
+    <Card className="mx-4 my-4 p-4 bg-[#bfc0c0] shadow-md rounded-lg w-64 h-64">
+      <Card.Header className="font-bold text-lg overflow-hidden text-[#1b263b] border-b-2 border-gray-200 dark:border-gray-700">
+        Category: {transactionData.category}
+      </Card.Header>
+      <Card.Body className="flex flex-col justify-between">
+        <div className="flex justify-between items-center mb-2 text-gray-600">
+          <Card.Text className="text-md font-semibold ">
+            Amount: <span className="text-green-600">₹{transactionData.amount}</span>
+          </Card.Text>
+          <div className="flex gap-2">
+            <AiFillEdit
+              onClick={handleShow}
+              className="text-blue-500 hover:text-blue-700 cursor-pointer transition duration-150"
+            />
+            <AiFillDelete
+              onClick={() => handleDelete(transactionData._id)}
+              className="text-red-500 hover:text-red-700 cursor-pointer transition duration-150"
+            />
           </div>
-          <Card.Text className="my-1">
-            Transaction Description : {transactionData.desc}
-          </Card.Text>
-          <Card.Text className="my-1">
-            Transaction Date : {transactionData?.date?.substring(0, 10)}
-          </Card.Text>
-        </Card.Body>
-      </Card>
+        </div>
+        <Card.Text className="text-sm font-bold text-gray-600  mb-1">
+          Description: {transactionData.desc}
+        </Card.Text>
+        <Card.Text className="text-sm text-gray-600 ">
+          Date: {transactionData?.date?.substring(0, 10)}
+        </Card.Text>
+      </Card.Body>
+    </Card>
 
       <Modal show={show} onHide={handleClose} animation={false} centered>
         <Modal.Header closeButton>

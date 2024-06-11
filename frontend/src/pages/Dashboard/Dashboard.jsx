@@ -189,37 +189,29 @@ const Dashboard = ({ user, thememode, toggle, setUser }) => {
   };
 
   return (
-    <div
-    className="bg-gray-800"
-    >
-      <Navbar thememode={thememode} toggle={toggle} />
+    <div className="bg-gray-800">
+      <Navbar />
       <div className="font-extrabold text-5xl mx-4 mt-4 underline underline-offset-3 decoration-slate-400 text-white">
         Welcome, {user.username}!
       </div>
       <div className="mt-2 mb-2 mx-4 text-gray-600 dark:text-gray-400 text-2xl">
         Let's add some transactions!
       </div>
-      <div className="h-full flex flex-col justify-center items-start ">
-        <div
-          className="flex w-[99vw] justify-evenly items-center h-20 p-4  d-parent"
-          style={{
-            backgroundColor: thememode === "dark" ? "#181818" : "#f0f0f0",
-          }}
-        >
-          {/* User monetary stats */}
-          <div className="  w-60 rounded-md flex flex-col justify-center bg-[#8656cd] h-10 text-white items-center chill">
+      <div className="flex flex-col justify-center items-center ">
+        <div className="flex w-[90vw] justify-evenly items-center h-20 p-4 d-parent rounded-md my-3 bg-[#BFC0C0]">
+          <div className="  w-60 rounded-md flex flex-col justify-center bg-slate-600 h-10 text-white items-center chill">
             <div className="flex  justify-between p-4 font-bold gap-6">
               <div>Income</div>
               <div>&#8377;{stats.totalIncome}</div>
             </div>
           </div>
-          <div className="  w-60 rounded-md flex flex-col justify-center bg-[#8656cd] h-10 text-white items-center chill">
+          <div className="  w-60 rounded-md flex flex-col justify-center bg-slate-600 h-10 text-white items-center chill">
             <div className="flex  justify-between p-4 font-bold gap-6">
               <div>Balance</div>
               <div>&#8377;{stats.balance}</div>
             </div>
           </div>
-          <div className="  w-60 rounded-md flex flex-col justify-center bg-[#8656cd] h-10 text-white items-center chill">
+          <div className="  w-60 rounded-md flex flex-col justify-center bg-slate-600 h-10 text-white items-center chill">
             <div className="flex  justify-between p-4 font-bold gap-6">
               <div className="text-md flex justify-evenly gap-2">
                 <span> Expense </span>
@@ -228,22 +220,16 @@ const Dashboard = ({ user, thememode, toggle, setUser }) => {
             </div>
           </div>
         </div>
-        {/* Filters */}
-        <div
-          className="flex px-4 py-4 justify-center items-center h-[100%] filter w-[99vw]"
-          style={{
-            backgroundColor: thememode === "dark" ? "#181818" : "#f0f0f0",
-          }}
-        >
+        <div className="flex px-4 py-4 justify-center items-center filter rounded-lg w-[90vw] bg-[#bfc0c0]">
           <div
             className="flex justify-center align-middle py-2 px-2 font-bold text-2xl"
-            style={{ color: thememode === "dark" ? "white" : "black" }}
+            style={{ color: "#1b263b" }}
           >
             Filters:
           </div>
           {/* Category */}
           <select
-            className="mx-2 border-2 rounded-md p-3 category-all"
+            className="mx-2 border-2 h-12 rounded-md p-2 category-all bg-slate-600"
             name="category"
             id="category"
             selected="All"
@@ -251,9 +237,9 @@ const Dashboard = ({ user, thememode, toggle, setUser }) => {
             value={filterInput.category}
           >
             <option value="">All Categories</option>
-            {uniqueCategories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
+            {uniqueCategories.map((option) => (
+              <option key={option} value={option}>
+                {option}
               </option>
             ))}
           </select>
@@ -261,7 +247,7 @@ const Dashboard = ({ user, thememode, toggle, setUser }) => {
           <input
             type="date"
             id="startDate"
-            className="mx-2 my-2 border-2 rounded-md p-3"
+            className="mx-2 my-2 border-2 h-12 rounded-md p-3 bg-slate-600"
             value={filterInput.startDate}
             onChange={handleFilterInput("startDate")}
             placeholder="Start date"
@@ -269,23 +255,21 @@ const Dashboard = ({ user, thememode, toggle, setUser }) => {
           <input
             type="date"
             id="endDate"
-            className="mx-2 my-2 border-2 rounded-md p-3"
+            className="mx-2 my-2 border-2 h-12 rounded-md p-3 bg-slate-600"
             value={filterInput.endDate}
             onChange={handleFilterInput("endDate")}
             placeholder="End date"
           ></input>
           <button
             onClick={handleFilter}
-            className="mx-2 p-2 my-2 bg-[#8656cd] text-white rounded-md lg:w-80"
+            className="mx-2 p-2 my-2 bg-[#374957] text-white rounded-md lg:w-80 hover:bg-[#192125]"
           >
             Clear Filter
           </button>
-          {/* Exporting data */}
-          {/* <CSVLink className='export-dashboard' data={filteredData} headers={headers} filename={"Transaction_Data.csv"}><button className='my-2  p-2 bg-[#8656cd] text-white p-2 rounded-md'>Export</button></CSVLink> */}
         </div>
         {/* Listing Transaction Cards below filter bar */}
-        <div className="min-h-screen w-full flex flex-col align-middle">
-          <div style={{ width: "100%" }}>
+        <div className="min-h-screen w-[90vw] flex flex-col items-center">
+          <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
             {(filterState === false ? transactionData : filteredData)?.map(
               (trans) => (
                 <TransactionCard
@@ -305,7 +289,7 @@ const Dashboard = ({ user, thememode, toggle, setUser }) => {
       {/* Add transaction modal */}
       <button
         onClick={handleShow}
-        className="bg-[#8656cd] text-white rounded-full px-2 py-2 w-12 h-12 shadow-md fixed bottom-8 right-8"
+        className="bg-[#bfc0c0] text-[#1b263b] rounded-full px-2 py-2 w-12 h-12 shadow-md fixed bottom-8 right-8 font-extrabold"
       >
         +
       </button>
