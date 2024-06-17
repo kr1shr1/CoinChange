@@ -3,8 +3,6 @@ import Card from "react-bootstrap/Card";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import Modal from "react-bootstrap/Modal";
 import axios from "axios";
-import { Button } from "react-bootstrap";
-import { AiTwotoneCalendar } from "react-icons/ai";
 // ------------- TransactionCard --------------------------
 const TransactionCard = ({
   user,
@@ -32,7 +30,7 @@ const TransactionCard = ({
       </>
     );
   }
-  const { type, amount, category, desc, date, currency } = transInput;
+  const { type, amount, category, desc, date} = transInput;
   //  ---------------- Input ---------------------
   const handleTransInput = (name) => (e) => {
     setTransInput({ ...transInput, [name]: e.target.value });
@@ -109,157 +107,131 @@ const TransactionCard = ({
         </Card.Text>
       </Card.Body>
     </Card>
-
-      <Modal show={show} onHide={handleClose} animation={false} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Edit Transaction</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Add transaction input section
-          <label htmlFor="type">Transaction type: </label>
+    <Modal show={show} onHide={handleClose} animation={false} centered>
+      <Modal.Header className="bg-gray-200">
+        <Modal.Title className="text-xl font-bold text-blue-900">
+          Edit Transaction
+        </Modal.Title>
+        <button
+          type="button"
+          className="absolute top-0 right-0 mt-2 mr-2 text-black bg-gray-300 hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 rounded-full p-2"
+          onClick={handleClose}
+        >
+          <span aria-hidden="true" className="text-bold rounded-full">
+            x
+          </span>
+        </button>
+      </Modal.Header>
+      <Modal.Body className="bg-gray-200 text-blue-900 p-4 space-y-4">
+        {/* Transaction Type Input */}
+        <div>
+          <label htmlFor="type" className="block font-medium">
+            Transaction Type
+          </label>
           <select
             name="type"
             id="type"
-            selected="Expense"
             value={type}
-            onChange={handleTransInput("type")}
-            className="px-1 border-1 py-1 mx-2 rounded-md"
+            onChange={handleTransInput('type')}
+            className="w-full px-3 py-2 border border-gray-300 bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           >
-            <option
-              value="expense"
-              className="font-bold"
-              style={{ color: "red" }}
-            >
+            <option value="expense" className="font-bold text-red-500">
               Expense
             </option>
-            <option
-              value="income"
-              className="font-bold"
-              style={{ color: "green" }}
-            >
+            <option value="income" className="font-bold text-green-500">
               Income
             </option>
           </select>
-          <br />
-          <Card variant="light" border="success" className="mx-4 my-4">
-            <Card.Header className="font-bold">
-              Transaction Category :- {transactionData.category}
-            </Card.Header>
-            <Card.Body>
-              <div className="flex justify-between items-center gap-40 border-2">
-                <Card.Text className="text-2xl  flex justify-evenly items-center font-bold mx-1">
-                  &#x20B9;{transactionData.amount}
-                </Card.Text>
+        </div>
 
-                <div className="flex justify-between items-center gap-40">
-                  <Card.Text className="flex align-middle my-1 mx-2">
-                    <AiTwotoneCalendar
-                      size={20}
-                      style={{ cursor: "pointer" }}
-                    />
-                    {transactionData.date &&
-                      transactionData.date.substring(0, 10)}
-                  </Card.Text>
-
-                  <div className="flex justify-between items-center gap-6">
-                    <AiFillEdit
-                      onClick={handleShow}
-                      style={{ cursor: "pointer", fontSize: "20px" }}
-                    />
-                    <AiFillDelete
-                      onClick={() => handleDelete(transactionData._id)}
-                      style={{ cursor: "pointer", fontSize: "20px" }}
-                    />
-                  </div>
-                </div>
-              </div>
-              <Card.Text className="font-bold my-2">
-                Transaction description :- {"  "}
-                {transactionData.desc}
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Modal.Body>
-      </Modal>
-      <Modal show={show} onHide={handleClose} animation={false} centered>
-        <Modal.Header closeButton style={{ cursor: "pointer" }}>
-          <Modal.Title>Edit Transaction</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <label htmlFor="type">Transaction type: </label>
+        {/* Currency Input */}
+        <div>
+          <label htmlFor="currency" className="block font-medium">
+            Currency
+          </label>
           <select
-            name="type"
-            id="type"
-            selected="Expense"
-            value={type}
-            onChange={handleTransInput("type")}
-            className="px-1 border-1 py-1 mx-2 rounded-md"
+            name="currency"
+            id="currency"
+            value="inr"
+            onChange={handleTransInput('currency')}
+            className="w-full px-3 py-2 border border-gray-300 bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           >
-            <option
-              value="expense"
-              className="font-bold"
-              style={{ color: "red" }}
-            >
-              Expense
-            </option>
-            <option
-              value="income"
-              className="font-bold"
-              style={{ color: "green" }}
-            >
-              Income
-            </option>
+            <option value="inr">INR</option>
           </select>
-          <br />
+        </div>
 
-          <label htmlFor="amount">Amount: </label>
+        {/* Amount Input */}
+        <div>
+          <label htmlFor="amount" className="block font-medium">
+            Amount
+          </label>
           <input
             type="number"
+            name="amount"
             value={amount}
-            name={"amount"}
-            onChange={handleTransInput("amount")}
+            onChange={handleTransInput('amount')}
+            className={`w-full px-3 py-2 border border-gray-300 bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+              type === 'expense' ? 'text-red-500' : 'text-green-500'
+            }`}
             required
-            style={{ color: type === "expense" ? "red" : "green" }}
           />
+        </div>
 
-          <label htmlFor="category">Category: </label>
+        {/* Category Input */}
+        <div>
+          <label htmlFor="category" className="block font-medium">
+            Category
+          </label>
           <input
-            name={"category"}
+            name="category"
+            type="text"
             value={category}
-            type="text"
-            onChange={handleTransInput("category")}
+            onChange={handleTransInput('category')}
+            className="w-full px-3 py-2 border border-gray-300 bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
+        </div>
 
-          <label htmlFor="desc">Description:</label>
+        {/* Description Input */}
+        <div>
+          <label htmlFor="desc" className="block font-medium">
+            Description
+          </label>
           <input
             type="text"
+            name="desc"
             value={desc}
-            name={"desc"}
-            onChange={handleTransInput("desc")}
+            onChange={handleTransInput('desc')}
+            className="w-full px-3 py-2 border border-gray-300 bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+        </div>
 
-          <label htmlFor="date">Date:</label>
+        {/* Date Input */}
+        <div>
+          <label htmlFor="date" className="block font-medium">
+            Date
+          </label>
           <input
             type="date"
+            name="date"
             value={date}
-            name={"date"}
-            onChange={handleTransInput("date")}
+            onChange={handleTransInput('date')}
+            className="w-full px-3 py-2 border border-gray-300 bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
-        </Modal.Body>
-        <Modal.Footer>
-          <button
-            className="bg-[#8656cd] p-2 rounded-md text-white"
-            onClick={handleSubmit}
-            required
-          >
-            Save
-          </button>
-        </Modal.Footer>
-      </Modal>
+        </div>
+      </Modal.Body>
+      <Modal.Footer className="bg-gray-200 flex justify-end">
+        <button
+          className="bg-blue-900 px-4 py-2 rounded-md text-white font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          onClick={handleSubmit}
+        >
+          Save
+        </button>
+      </Modal.Footer>
+    </Modal>
     </div>
   );
 };

@@ -26,31 +26,30 @@ export default function Inbox({ user, setUser, thememode, toggle }) {
   //fetching data from local storage
   useEffect(() => {
     setinboxuser(user);
-  }, [user]);
-  useEffect(() => {
     console.log(inboxuser);
-  });
+    }, [user]);
 
   return (
-    <div className="dark:bg-[#181818] h-[100vh]">
+    <div className="bg-gray-900 h-[100vh]">
       <Navbar thememode={thememode} toggle={toggle} />
-      <div className="font-extrabold text-5xl mx-4 mt-4 underline underline-offset-8 decoration-[#8656cd] dark:text-[#f0f0f0]">
+      <div className="font-extrabold text-5xl mx-4 mt-4 underline underline-offset-8 decoration-[#f0f0f0] dark:text-[#f0f0f0]">
         Inbox
       </div>
 
       <div>
-        {inboxuser &&
-          inboxuser.inbox?.toReversed().map((msg, index) => {
+        {!user._id? (<div className="m-4 w-[95vw] rounded-md flex flex-col justify-center bg-slate-600 h-10 text-white chill p-2">
+          Your Inbox is empty
+        </div>) : inboxuser.inbox?.toReversed().map((msg, index) => {
             const tokens = msg.split(" ");
             const key = tokens[0];
 
             return (
               <div key={key}>
                 {msg.includes("sent") ? (
-                  <div className="m-4 bg-gray-200 p-2 rounded-md flex  justify-between align-middle dark:bg-[#282828] dark:text-white">
-                    <div className="m-3">{msg}</div>
+                  <div className="m-4 w-[95vw] rounded-md flex justify-between bg-slate-600 h-10 text-white chill ">
+                    <div className="m-2">{msg}</div>
                     <button
-                      className="p-2 m-2 rounded-md text-white"
+                      className="px-2 m-2 rounded-md text-white"
                       style={{
                         backgroundColor: inboxuser.friends.includes(key)
                           ? "green"
@@ -62,7 +61,7 @@ export default function Inbox({ user, setUser, thememode, toggle }) {
                     </button>
                   </div>
                 ) : (
-                  <div className="m-4 bg-gray-200 p-2 rounded-md dark:bg-[#282828] dark:text-white">
+                  <div className="m-4 w-[95vw] rounded-md flex flex-col justify-center bg-slate-600 h-10 text-white chill p-2">
                     {msg}
                   </div>
                 )}

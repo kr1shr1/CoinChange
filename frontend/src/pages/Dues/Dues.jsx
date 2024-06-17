@@ -137,7 +137,7 @@ function Dues({ user, thememode, toggle }) {
         </div>
 
         <div className="hero-section h-full flex flex-wrap justify-between">
-          <div className="hero-left border border-purple-600 dark:border-gray-600 bg-white dark:bg-gray-900 p-6 rounded-lg shadow-lg w-full md:w-[45%] lg:w-[30%]">
+          <div className="hero-left border border-gray-600 bg-gray-900 p-6 rounded-lg shadow-lg w-full md:w-[45%] lg:w-[30%]">
             <div className="due flex flex-col gap-4 mb-4">
               <label htmlFor="Title" className="text-black ">
                 Reason
@@ -216,18 +216,6 @@ function Dues({ user, thememode, toggle }) {
               >
                 <option>Select:</option>
                 <option value="inr">INR</option>
-                <option value="usd">USD</option>
-                <option value="eur">EUR</option>
-                <option value="gbp">GBP</option>
-                <option value="jpy">JPY</option>
-                <option value="aud">AUD</option>
-                <option value="cad">CAD</option>
-                <option value="cny">CNY</option>
-                <option value="hkd">HKD</option>
-                <option value="sgd">SGD</option>
-                <option value="chf">CHF</option>
-                <option value="sek">SEK</option>
-                <option value="mxn">MXN</option>
               </select>
             </div>
 
@@ -251,7 +239,7 @@ function Dues({ user, thememode, toggle }) {
             </div>
 
             <div
-              className="add-btn flex justify-center items-center cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300"
+              className="flex justify-center items-center cursor-pointer bg-slate-600 hover:bg-slate-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300"
               onClick={handleSubmit}
             >
               Add Due

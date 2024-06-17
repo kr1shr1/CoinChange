@@ -25,18 +25,21 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navbar user={user} setUser={setUser} />} />
-        <Route path="/login" element={<Login user={user} setUser={setUser} />} />
-        <Route path="/signup" element={<Signup user={user} setUser={setUser} />} />
-        <Route path="/navbar" element={<Navbar user={user} setUser={setUser} />} />
-        <Route path="/dashboard" element={<Dashboard user={user} setUser={setUser} />} />
-        <Route path="/dues" element={<Dues user={user} />} />
+        <Route path="/" element={<Dashboard user={user} setUser={setUser}/>} />
+        <Route path="/login" element={<Login user={user} setUser={setUser}/>} />
+        <Route path="/signup" element={<Signup user={user} setUser={setUser}/>} />
+        <Route path="/dashboard" element={<Dashboard user={user} setUser={setUser}/>} />
+        <Route path="/dues" element={<Dues user={user}/>} />
         <Route path="/savings" element={<Savings2 user={user} />} />
-        <Route path="/groups" element={<Main user={user} />} />
-        <Route path="/simplifydebt/:id" element={<SimplifyDebt user={user} />} />
-        <Route path="/billsplit" element={<Grouphome user={user} />} />
-        <Route path="/inbox" element={<Inbox user={user} setUser={setUser} />} />
-        <Route path="/profile" element={<Profile user={user} setUser={setUser} />} /> 
+        {/* <Route path="/transcard" element={<TransactionCard />} /> */}
+        <Route path="/groups" element={<Main user={user}/>} />
+        {/* <Route path="/billsplit/:id" element={<Grouphome user={user}/>} /> */}
+        <Route path="/simplifydebt/:id" element={<SimplifyDebt user={user}/>} /> 
+        {/* <Route path="/btn" element={<ToggleBtn />} /> */}
+        {/* <Route path="/save" element={<Savings2 user={user}/>} /> */}
+        <Route path="/profile" element={<Profile user={user} setUser={setUser}/>} />
+        <Route path="/billsplit" element={<Grouphome user={user}/>} />
+        <Route path="/inbox" element={<Inbox user={user} setUser={setUser}/>} /> 
       </Routes>
     </BrowserRouter>
   );
