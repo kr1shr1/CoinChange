@@ -1,194 +1,283 @@
-import React from 'react';
-import Navbar from '../../Components/Navbar/Navbar';
-import { useState } from 'react';
-import { storage } from '../firebase';
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import axios from "axios"
+import React, { useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
+import axios from "axios";
+import Navbar from "../../Components/Navbar/Navbar.jsx"; // Ensure the path and case match the actual file
+import Avatar from "@mui/material/Avatar";
+import "./Profile.css"; // Import your CSS file
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Modal from "@mui/material/Modal";
+import Rating from "@mui/material/Rating";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Snackbar from "@mui/material/Snackbar";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close"; 
+import { v4 as uuidv4 } from "uuid";
 
-import { AiFillEdit } from 'react-icons/ai';
-import { RxCross2 } from "react-icons/rx";
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 600,
+  bgcolor: "background.paper",
+  borderRadius: 1,
+  boxShadow: 24,
+  p: 4,
+};
 
-function Profile({ user, thememode, toggle,setUser}) {
-  const [image, setImage] = useState(null);
-  const [url, setUrl] = useState(user.image);
-  const [show,setShow]=useState(false)
-  const [flag,setFlag]=useState(false)
-  console.log(user)
+const Profile = ({ user, setUser, setIsLoggedIn }) => {
+  const params = useParams();
+  const [data, setData] = useState({});
+  const [open, setOpen] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
+  const [profileRating, setProfileRating] = useState(0);
+  const [reviews, setReviews] = useState(null);
+  const [openSnack, setOpenSnack] = useState(false);
+  const [openEditSnack, setOpenEditSnack] = useState(false);
+  const [newPhoto, setNewPhoto] = useState(null);
 
-  console.log(image)
-
-  React.useEffect(()=>{
-    const check=async()=>{
-      try{
-        const loggedInUser = localStorage.getItem("user");
-        if (loggedInUser) {
-          console.log(loggedInUser);
-          const foundUser = JSON.parse(loggedInUser);
-          console.log("found user",foundUser)
-          setUser(foundUser);
-        }
-      }catch(err){
-        console.log(err)
-      }
-    }
-    check()
-  },[user?._id])
-
-
-  //function to take image input
-  const handleChange = (e) => {
-    if (e.target.files[0]) {
-      setImage(e.target.files[0]);
-    }
-  };
-
-
-  //function to handle image upload
-  const handleUpload = () => {
-    const imageRef = ref(storage,`images/${image.name}`);
-    uploadBytes(imageRef, image)
-      .then(() => {
-        getDownloadURL(imageRef)
-          .then((url) => {
-            const addUrl= async()=>{
-              try{
-                const res = await axios.put(`http://localhost:3001/api/user/addImg/${user._id}`,{url})
-                setUser(res.data.user)
-                localStorage.setItem("user",JSON.stringify(res.data.user))
-                setFlag(prev=>!prev)
-                console.log("img url",res.data)
-              }catch(err){
-                console.log(err)
-              }
-            } 
-            addUrl()
-            setUrl(url);
-          })
-          .catch((error) => {
-            console.log(error.message, "error getting the image url");
-          });
-        setImage(null);
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
-  };
-  
-  const handleShow=()=>{
-    setShow(prev=>!prev)
-  }
-
-  const [badges, setBadges] = useState([]);
-  React.useEffect(() => {
-    const getBadges = async () => {
+  useEffect(() => {
+    const getUser = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/api/user/getBadges/${user._id}`);
-        setBadges(response.data.badges);
-        console.log(response.data.badges)
-      } catch (error) {
-        console.log(error);
+        const res = await axios.get(
+          `http://localhost:3001/api/user/getUser/${params.id}`
+        );
+        setData(res.data.user);
+      } catch (err) {
+        console.log(err);
       }
     };
-    getBadges();
-  }, [user._id]);
+
+    const getRating = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:3001/api/reviews/getRating/${params.id}`
+        );
+        setProfileRating(res.data.rating);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    const getReviews = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:3001/api/reviews/getReviews/${params.id}`
+        );
+        setReviews(res.data.reviews);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    getUser();
+    getRating();
+    getReviews();
+  }, [params.id]);
+
+  const handleSubmit = async () => {
+    try {
+      const review = {
+        _id: uuidv4(),
+        Reviewer: user._id,
+        ReviewedUser: params.id,
+        ReviewerName: user.name,
+        Rating: rating,
+        Comment: comment,
+        Date: new Date(),
+      };
+      const res = await axios.post(
+        `http://localhost:3001/api/reviews/addReview/${params.id}`,
+        review
+      );
+      setComment("");
+      setRating(0);
+      handleClose();
+      toast.success("Review added successfully!");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const handleCloseSnack = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnack(false);
+  };
+  const handleCloseEditSnack = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenEditSnack(false);
+  };
+  const action = (
+    <React.Fragment>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleCloseSnack}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
+  const actionedit = (
+    <React.Fragment>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleCloseEditSnack}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
+
+  const handlePhotoChange = (e) => {
+    const file = e.target.files[0];
+    setNewPhoto(file);
+  };
+
+  const handlePhotoUpdate = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("photo", newPhoto);
+      await axios.post(
+        `http://localhost:3001/api/user/updatePhoto/${params.id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      window.location.reload();
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
-    <>
-      <Navbar thememode={thememode} toggle={toggle} flag={flag} setFlag={setFlag}/>
-      <div
-        className='flex flex-col justify-start items-center p-3 border-[#8656cd] h-full' 
-        style={{ backgroundColor: thememode === 'dark' ? '#181818' : '#f0f0f0' }}
-      >
-        <div
-          className='flex flex-col mx-auto w-[50%] h-[250px] border-1 border-black p-2 rounded-sm'
-          style={{ backgroundColor: thememode === 'dark' ? '#8656cd' : '#8656cd', color: thememode == 'dark' ? 'white' : 'black' }}
-        >
-          {/* ----------------------------------------------------Profile picture section----------------------------------------------- */}
-          <div className=' flex justify-center align-middle items-center w-[70%] h-[80%] mx-auto p-1'>
-            <img src={url || 'ProfileImg.jpeg'} className='w-[100px] h-[100px] rounded-full static' alt='' />
-            <br />{' '} <AiFillEdit onClick={handleShow} className='bg-white rounded-full h-8 w-8 p-1 -translate-x-4 translate-y-6 dark:text-black' style={{display:show==false ? "":"none",cursor:"pointer"}}/>
-           <div className='flex flex-col bg-white p-2 rounded-md m-2' style={{display:show==true ? "":"none"}}>
-            <div className='flex'> <input type="file" className='border-none' onChange={handleChange}/><RxCross2  className="text-black" onClick={handleShow}/></div>
-            <button className="m-2 bg-[#8656cd] text-white p-2 rounded-md hover:bg-purple-500" onClick={handleUpload}>
-          Upload
-        </button></div>
+    <div>
+      <Navbar user={user} setIsLoggedIn={setIsLoggedIn} />
+      <div className="profile-container">
+        <div className="profile-header">
+          <div className="profile-info">
+            <h1>{data?.username}</h1>
+            <div className="name" style={{ fontSize: "24px", color: "white" }}>
+              Name: {data?.name}
+            </div>
+            <div className="rating">
+              {Math.round(profileRating * 100) / 100}
+            </div>
           </div>
-          
+          <label htmlFor="photo-upload" className="photo-icon">
+            <input
+              type="file"
+              id="photo-upload"
+              accept="image/*"
+              onChange={handlePhotoChange}
+              style={{ display: "none" }}
+            />
+            <Avatar src="/broken-image.jpg" className="avatar" />
+          </label>
         </div>
 
-        <div
-          className='flex flex-col mx-auto w-[50%] h-auto justify-start items-center p-3 border-1 border-black gap-3 rounded-sm'
-          style={{ backgroundColor: thememode === 'dark' ? 'rgb(195, 189, 189)' : 'white', border: '4px solid black' }}
-        >
-         
-
-          {/* ------------------------------------------------------Existing labels and input fields---------------------------------------------------- */}
-          <label
-            htmlFor='username'
-            className='w-full flex justify-between items-center gap-1 border-1 p-1 border-black rounded-md'
-            style={{ backgroundColor: thememode == 'dark' ? 'rgb(222, 221, 221)' : 'white' }}
-          >
-            <div className='w-[30%] text-md p-1'>
-              <b>Username</b>
+        <div className="separator"></div>
+        <div className="profile-details">
+          <div className="w-1/2 float-left mr-4">
+            <div className="about-section bg-gray-100 p-4 rounded font-semibold text-gold mt-2">
+              <h2>About</h2>
+              <div className="email mt-4">EMAIL: {data?.email}</div>
+              <div className="age mt-4">Age: {data?.age}</div>
+              <div className="location mt-4">Location: {data?.location}</div>
+              <div className="gender mt-4">Gender: {data?.gender}</div>
             </div>
-            <input type='text' value={user.username} readOnly />
-          </label>
-
-          <label
-            htmlFor='username'
-            className='w-full flex justify-between items-center gap-1 border-1 p-1 border-black rounded-md'
-            style={{ backgroundColor: thememode == 'dark' ? 'rgb(222, 221, 221)' : 'white' }}
-          >
-            <div className='w-[30%] text-md p-1'>
-              <b>Email</b>
-            </div>
-            <input type='text' value={user.email} readOnly />
-          </label>
-
-           {/* Subheading for Friends */}
-           <div className='w-full text-xl font-bolder mb-2' style={{ color: thememode === 'dark' ? 'black' : 'black' }}>
-            Friends
+            <Link to={`/reviews/${params.id}`} className="see-reviews-button">
+              <Button
+                variant="contained"
+                style={{
+                  backgroundColor: "#006400",
+                  color: "goldenrod",
+                  borderRadius: "5%",
+                  padding: "12px 24px",
+                  fontSize: "16px",
+                }}
+                size="small"
+              >
+                <span style={{ color: "goldenrod" }}>See Reviews</span>
+              </Button>
+            </Link>
           </div>
 
-          
-          {user?.friends?.map((friend, index) => (
-            // <label
-            //   key={index}
-            //   htmlFor={`friend-${index}`}
-            //   className='w-full flex justify-between items-center gap-1 border-1 p-1 border-black rounded-md'
-            //   style={{ backgroundColor: thememode == 'dark' ? 'rgb(222, 221, 221)' : 'white' }}
-            // >
-            <>
-              <div className='w-[30%] text-md p-1'>
-                {/* <b>{friend}</b> */}
-              </div>
-              <input type='text' id={`friend-${index}`} value={friend} readOnly />
-            </>
-            // </label>
-          ))}
-
-      <div
-        className='flex flex-col mx-auto w-[50%] h-auto justify-start items-center p-3 gap-3 rounded-sm'
-        style={{ backgroundColor: thememode === 'dark' ? 'rgb(195, 189, 189)' : 'white'}}
-      >
-        <div className='w-full text-xl font-bolder mb-2 flex justify-center ' style={{ color: thememode === 'dark' ? 'black' : 'black' }}>
-          Badges
         </div>
-        <div className='flex flex-warp'>
-        {badges?.map((badge, index) => (
-          <img
-          key={index}
-          src={badge}
-          alt={`Badge ${index + 1}`}
-          className='w-32 h-32 m-2 object-cover'
-        />
-        ))}
-        </div>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <Typography component="legend" variant="subtitle1">
+              How is {data.name} as a driver/rider? Leave a review!
+            </Typography>
+            <div className="flex flex-col justify-around">
+              <Rating
+                name="simple-controlled"
+                value={rating}
+                onChange={(event, newValue) => {
+                  setRating(newValue);
+                }}
+                className="mb-4 mt-2"
+                aria-required
+              />
+              <TextField
+                id="outlined-multiline-static"
+                label="Review"
+                multiline
+                rows={4}
+                className="my-2"
+                value={comment}
+                onChange={(e) => {
+                  setComment(e.target.value);
+                }}
+              />
+            </div>
+            <div className="flex justify-end mt-5">
+              <Button variant="outlined" size="large" onClick={handleSubmit}>
+                Add Review
+              </Button>
+            </div>
+          </Box>
+        </Modal>
       </div>
-        </div>
-      </div>
-    </>
+      <ToastContainer />
+      <Snackbar
+        open={openSnack}
+        autoHideDuration={6000}
+        action={action}
+        onClose={handleCloseSnack}
+        message="Review deleted"
+      />
+      <Snackbar
+        open={openEditSnack}
+        autoHideDuration={6000}
+        action={actionedit}
+        onClose={handleCloseEditSnack}
+        message="Review edited"
+      />
+    </div>
   );
-}
+};
 
 export default Profile;
