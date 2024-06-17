@@ -12,13 +12,14 @@ function Navbar({ thememode, toggle, setUser, user, setFlag, flag }) {
   const [navuser, setNavuser] = useState({});
   const [showNav, setShowNav] = useState(false);
   const navigate = useNavigate();
-
+  const [f, setF] = useState(0);
   useEffect(() => {
     const check = async () => {
       try {
         const loggedInUser = localStorage.getItem("user");
         if (loggedInUser) {
           const foundUser = JSON.parse(loggedInUser);
+          console.log(foundUser);
           setNavuser(foundUser);
         }
       } catch (err) {
@@ -27,18 +28,25 @@ function Navbar({ thememode, toggle, setUser, user, setFlag, flag }) {
     };
     check();
   }, [user?._id, flag]);
-
   const handleLogout = () => {
     localStorage.clear();
+    navigate("/login");
+  };
+  const handleLogin = () => {
     navigate("/login");
   };
 
   return (
     <div className="flex justify-between items-center bg-gray-800 p-0">
       {/* Website Name */}
-      <div className="text-3xl ml-10 text-white font-extrabold hover:cursor-pointer" onClick={()=>{
-        navigate("/dashboard");
-      }}>Olympus</div>
+      <div
+        className="text-3xl ml-10 text-white font-extrabold hover:cursor-pointer"
+        onClick={() => {
+          navigate("/dashboard");
+        }}
+      >
+        Olympus
+      </div>
 
       {/* Navigation Links */}
       <div
@@ -55,13 +63,22 @@ function Navbar({ thememode, toggle, setUser, user, setFlag, flag }) {
             {item.charAt(0).toUpperCase() + item.slice(1)}
           </button>
         ))}
-        <button
-          className="bg-red-600 hover:bg-red-500 px-4 py-2 rounded-md text-white font-bold transition duration-300"
-          onClick={handleLogout}
-        >
-          Logout
-        </button>
-        
+        {!(navuser && navuser._id) ? (
+          <button
+            className="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-md text-white font-bold transition duration-300"
+            onClick={handleLogin}
+          >
+            LogIn
+            {console.log(user)}
+          </button>
+        ) : (
+          <button
+            className="bg-red-600 hover:bg-red-500 px-4 py-2 rounded-md text-white font-bold transition duration-300"
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
+        )}
       </div>
 
       {/* User Icons */}
@@ -73,13 +90,13 @@ function Navbar({ thememode, toggle, setUser, user, setFlag, flag }) {
           <FaRegEnvelope className="text-white" />
         </button>
         <button
-          className="bg-gray-600 hover:bg-gray-500 p-2.5 rounded-half"
+          className="bg-gray-600 hover:bg-gray-500 py-3.5 px-3 rounded-full"
           onClick={() => navigate("/profile")}
         >
           <FontAwesomeIcon icon={faUser} className="text-white" />
         </button>
         <div className="lg:hidden">
-          <button 
+          <button
             className="p-2 rounded-full"
             onClick={() => setShowNav(!showNav)}
           >

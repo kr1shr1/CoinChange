@@ -47,10 +47,6 @@ const Dashboard = ({ user, thememode, toggle, setUser }) => {
   // Functions to handle modal visibility
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const handleIncomeClose = () => setIncomeShow(false);
-  const handleIncomeShow = () => setIncomeShow(true);
-  const handleExpenseClose = () => setExpenseShow(false);
-  const handleExpenseShow = () => setExpenseShow(true);
 
   // Functions to handle input
   const handleTransInput = (name) => (e) => {
@@ -189,10 +185,10 @@ const Dashboard = ({ user, thememode, toggle, setUser }) => {
   };
 
   return (
-    <div className="bg-gray-900">
+    <div className="bg-gray-900 h-[90vh]">
       <Navbar />
       <div className="font-extrabold text-5xl mx-4 mt-4 underline underline-offset-3 decoration-slate-400 text-white">
-        Welcome, {user.username}!
+        Welcome {user._id? ', ' + user.username + '!' : <div></div>}
       </div>
       <div className="mt-2 mb-2 mx-4 text-gray-600 dark:text-gray-400 text-2xl">
         Let's add some transactions!
@@ -268,7 +264,10 @@ const Dashboard = ({ user, thememode, toggle, setUser }) => {
           </button>
         </div>
         {/* Listing Transaction Cards below filter bar */}
-        <div className="min-h-screen w-[90vw] flex flex-col items-center">
+        {!transactionData[0] ? (<div className="w-[90vw] mt-3 text-slate-400">
+          No Transaction Data Available
+        </div>) : 
+        (<div className=" w-[90vw] flex flex-col items-center">
           <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
             {(filterState === false ? transactionData : filteredData)?.map(
               (trans) => (
@@ -284,7 +283,9 @@ const Dashboard = ({ user, thememode, toggle, setUser }) => {
               )
             )}
           </div>
-        </div>
+        </div>)
+        }
+        
       </div>
       {/* Add transaction modal */}
       <button

@@ -42,10 +42,9 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navbar user={user} thememode={thememode} toggle={toggle} setUser={setUser} />} />
+          <Route path="/" element={<Dashboard user={user} thememode={thememode} toggle={toggle} setUser={setUser}/>} />
           <Route path="/login" element={<Login user={user} setUser={setUser}thememode={thememode} toggle={toggle}/>} />
           <Route path="/signup" element={<Signup user={user} setUser={setUser}thememode={thememode} toggle={toggle}/>} />
-          <Route path="/navbar" element={<Navbar user={user} thememode={thememode} toggle={toggle} setUser={setUser}/>} />
           <Route path="/dashboard" element={<Dashboard user={user} thememode={thememode} toggle={toggle} setUser={setUser}/>} />
           <Route path="/dues" element={<Dues user={user} thememode={thememode} toggle={toggle}/>} />
           <Route path="/savings" element={<Savings2 user={user} thememode={thememode} toggle={toggle} />} />
