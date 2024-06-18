@@ -85,45 +85,31 @@ const GroupCard = ({
   };
   return (
     <div className="flex justify-center items-center card-parent h-full p-1">
-      <Card
-        border="secondary"
-        className="card-component flex flex-col justify-start items-start gap-3"
-        style={{
-          backgroundColor: thememode === "dark" ? "#282828" : "white",
-          color: thememode === "dark" ? "white" : "black",
-        }}
-      >
-        <Card.Body className="w-full p-1 ">
+      <Card className="mx-4 my-4 p-4 bg-[#bfc0c0] shadow-md rounded-lg card-component flex flex-col justify-start items-start gap-3">
+        <Card.Body className="w-full p-1">
           <div className="flex flex-col justify-start items-start gap-1">
-            <Card.Header className="w-full">
-              <b> Group Title</b> :- {groupData.title}
+            <Card.Header className="font-bold text-lg overflow-hidden text-[#1b263b] border-b-2 border-gray-200 dark:border-gray-700">
+              Group Title: {groupData.title}
             </Card.Header>
-            <div className="p-2">
-              <Card.Text className="text-md w-fit justify-start items-center">
-                <b> Group Code </b> :- <br />
-                <div className="flex align-middle">
+            <div className="p-2 w-[100%]">
+              <Card.Text className="text-md items-center">
+                <b>Group Code</b>:
+                <div className="flex align-middle justify-between  mt-1">
                   <div className="flex">
                     <input
                       type="text"
                       value={groupData.groupCode}
-                      name=""
-                      id=""
-                      style={{
-                        backgroundColor:
-                          thememode === "dark" ? "#3a3a3a" : "white",
-                      }}
+                      readOnly
+                      className={`px-2 py-1 border w-[100%] border-gray-300 rounded-md ${thememode === "dark" ? "bg-[#3a3a3a] text-white" : "bg-white text-black"} focus:outline-none focus:ring-2 focus:ring-blue-500`}
                     />
-                    <CopyToClipboard
-                      text={groupData.groupCode}
-                      onCopy={handleCopyToClipboard}
-                    >
-                      <button>
-                        <MdContentCopy className="ml-2 text-xl" />
+                    <CopyToClipboard text={groupData.groupCode} onCopy={handleCopyToClipboard}>
+                      <button className="ml-2 text-xl text-gray-500 hover:text-gray-700 transition duration-150">
+                        <MdContentCopy />
                       </button>
                     </CopyToClipboard>
                   </div>
                   <button
-                    className="mx-2 px-2 bg-[#8656cd] rounded-md text-white lg:w-80 md:w-80"
+                    className="ml-5 px-2 rounded-md transition ease-in-out delay-150 bg-slate-600 hover:bg-slate-700 hover:scale-105 duration-300 text-white font-bold w-full"
                     onClick={handleAddFriendShow}
                   >
                     or Add Friend
@@ -131,75 +117,73 @@ const GroupCard = ({
                 </div>
               </Card.Text>
             </div>
-
             <div className="w-full p-2 my-2 flex flex-col justify-center items-start gap-3">
-              <button
-                className="rounded-md p-1 text-white w-full bg-[#8656cd]"
-                onClick={() => navigate(`/simplifydebt/${groupData._id}`)}
-                style={{ cursor: "pointer" }}
-              >
-                Simplify Debt
-              </button>
-              <button
-                className="rounded-md p-1 text-white w-full bg-[#8656cd]"
-                onClick={() => navigate(`/billsplit/${groupData._id}`)}
-                style={{ cursor: "pointer" }}
-              >
-                Split bill
-              </button>
-
-              <div className="flex justify-between items-center w-full">
-                <AiFillEdit
-                  onClick={handleShow}
-                  style={{ cursor: "pointer" }}
-                />
-                <AiFillDelete onClick={handleDelete} />
+              <div className="flex justify-between item-center w-full gap-4">
+                <button
+                  className="rounded-md h-10 p-1 transition ease-in-out delay-150 bg-slate-600 hover:bg-slate-700 hover:scale-105 duration-300 text-white font-bold w-full"
+                  onClick={() => navigate(`/simplifydebt/${groupData._id}`)}
+                >
+                  Simplify Debt
+                </button>
+                <button
+                  className="rounded-md h-10 p-1 transition ease-in-out delay-150 bg-slate-600 hover:bg-slate-700 hover:scale-105 duration-300 text-white font-bold w-full"
+                  onClick={() => navigate(`/billsplit/${groupData._id}`)}
+                >
+                  Split Bill
+                </button>
+                <button
+                  className="rounded-md h-10 p-1 transition ease-in-out delay-150 bg-red-600 hover:bg-red-700 hover:scale-105 cursor-pointer duration-300 text-white font-bold w-full"
+                  onClick={handleDelete}
+                >
+                  Delete
+                </button>
               </div>
             </div>
           </div>
         </Card.Body>
       </Card>
-      <Modal
-        show={showAddFriend}
-        onHide={handleAddFriendClose}
-        animation={false}
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Select friends to be added</Modal.Title>
+      <Modal show={showAddFriend} onHide={handleAddFriendClose} animation={false} centered>
+        <Modal.Header className="bg-[#e2e8f0]">
+          <Modal.Title className="text-xl font-bold text-[#1b263b]">Select friends to be added</Modal.Title>
+          <button
+            type="button"
+            className="absolute top-0 right-0 mt-2 mr-2 text-black bg-gray-300 hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 rounded-full p-2"
+            onClick={handleAddFriendClose}
+          >
+            <span aria-hidden="true" className="text-bold rounded-full">
+              x
+            </span>
+          </button>
         </Modal.Header>
-        <Modal.Body>
-          <ul className="friends-list">
-            {user.friends.map((name, index) => {
-              return (
-                <li key={index}>
-                  <div className="toppings-list-item h-8 align-middle">
-                    <div className="left-section flex px-4 align-middle">
-                      <input
-                        type="checkbox"
-                        id={`custom-checkbox-${index}`}
-                        name={name}
-                        value={name}
-                        checked={checkedState[index]}
-                        onChange={() => handleOnChange(index)}
-                        className="flex justify-start w-4 align middle"
-                      />
-                      <label
-                        htmlFor={`custom-checkbox-${index}`}
-                        className="flex align-middle m-2"
-                      >
-                        {name}
-                      </label>
-                    </div>
+        <Modal.Body className="bg-[#e2e8f0] text-[#1b263b] p-4">
+          <ul className="friends-list space-y-2">
+            {user[0] ? (
+              <div className="text-center text-gray-600">No Friend in your friend list</div>
+            ) : (
+              user.friends.map((name, index) => (
+                <li key={index} className="flex items-center">
+                  <div className="toppings-list-item h-8 flex items-center w-full px-4">
+                    <input
+                      type="checkbox"
+                      id={`custom-checkbox-${index}`}
+                      name={name}
+                      value={name}
+                      checked={checkedState[index]}
+                      onChange={() => handleOnChange(index)}
+                      className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <label htmlFor={`custom-checkbox-${index}`} className="ml-2 text-gray-700">
+                      {name}
+                    </label>
                   </div>
                 </li>
-              );
-            })}
+              ))
+            )}
           </ul>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="bg-[#e2e8f0] flex justify-end">
           <button
-            className="rounded-md p-1 text-white w-full bg-[#8656cd]"
+            className="bg-[#1b263b] px-4 py-2 rounded-md text-white font-semibold hover:bg-[#2e4266] focus:outline-none focus:ring-2 focus:ring-blue-500"
             onClick={handleAddFriendsToGroup}
             required
           >
