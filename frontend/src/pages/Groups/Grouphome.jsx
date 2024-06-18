@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Card } from "react-bootstrap";
 import Navbar from "../../Components/Navbar/Navbar.jsx";
 import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
 import axios from "axios";
-import GroupCard from "../../Components/GroupCard/GroupCard.jsx";
 import { useParams } from "react-router-dom";
 
 const Grouphome = ({ user, thememode, toggle }) => {
@@ -130,11 +127,10 @@ const Grouphome = ({ user, thememode, toggle }) => {
       <Navbar thememode={thememode} toggle={toggle} />
 
       <div
-        className="flex flex-col justify-center items-start"
-        style={{ backgroundColor: thememode == "dark" ? "#181818" : "#f0f0f0" }}
+        className="flex flex-col justify-center items-start bg-slate-700"
       >
         <div className="font-extrabold text-5xl mx-4 mt-4 underline underline-offset-8 decoration-[#8656cd] dark:text-[#f0f0f0]">
-          Split Bills
+          lund bill
         </div>
         <div className="m-3 pt-3 text-4xl bg-[#f0f0f0] light:text-black font-bold dark:bg-[#181818] dark:text-white p-2">
           Group Title: {groupData.title}

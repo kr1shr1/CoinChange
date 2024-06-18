@@ -33,7 +33,7 @@ function App() {
         <Route path="/savings" element={<Savings2 user={user} />} />
         {/* <Route path="/transcard" element={<TransactionCard />} /> */}
         <Route path="/groups" element={<Main user={user}/>} />
-        {/* <Route path="/billsplit/:id" element={<Grouphome user={user}/>} /> */}
+        <Route path="/billsplit/:id" element={<Grouphome user={user}/>} />
         <Route path="/simplifydebt/:id" element={<SimplifyDebt user={user}/>} /> 
         {/* <Route path="/btn" element={<ToggleBtn />} /> */}
         {/* <Route path="/save" element={<Savings2 user={user}/>} /> */}
