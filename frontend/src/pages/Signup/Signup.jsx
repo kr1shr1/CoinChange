@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './SignUp.css';
-import GoogleButton from 'react-google-button';
 
 function Signup({ user, setUser }) {
   const navigate = useNavigate();
@@ -89,42 +88,42 @@ function Signup({ user, setUser }) {
   };
 
   return (
-    <form action="" onSubmit={submitFunction} className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="w-full max-w-sm p-6 bg-white rounded-lg shadow-lg">
-        <div className="text-3xl font-bold text-center text-purple-600 mb-6">Sign Up</div>
+    <form action="" onSubmit={submitFunction} className="flex justify-center items-center h-screen bg-slate-400">
+      <div className="w-full max-w-sm justify-center py-2 px-4 bg-white m-4 rounded-lg shadow-lg">
+        <div className="text-3xl font-bold text-center text-slate-600 m-4">Sign Up</div>
         <div className="space-y-4">
           <div className="flex flex-col">
-            <label htmlFor="uname" className="text-sm font-semibold">Username</label>
+            {/* <label htmlFor="uname" className="text-sm font-semibold text-slate-700">Username</label> */}
             <input
               type="text"
               value={username}
-              placeholder="Enter your username"
+              placeholder="Username"
               name="uname"
               onChange={handleUsernameChange}
-              className="input-signup border-b-2 border-purple-600 py-2 px-3 focus:outline-none focus:border-purple-700 transition duration-300"
+              className="input-signup border-b-2 border-slate-100 py-2 px-3 focus:outline-none focus:border-slate-700 transition duration-300"
               required
             />
           </div>
           <div>
-          <label htmlFor="name" className="text-sm font-semibold">Name</label>
+          {/* <label htmlFor="name" className="text-sm font-semibold text-slate-700">Name</label> */}
             <input
               type="text"
               value={name}
-              placeholder="Enter your name"
+              placeholder="Name"
               name="uname"
               onChange={handleNameChange}
-              className="input-signup border-b-2 border-purple-600 py-2 px-3 focus:outline-none focus:border-purple-700 transition duration-300"
+              className="input-signup border-b-2 border-slate-100 py-2 px-3 focus:outline-none focus:border-slate-700 transition duration-300"
               required
             />
           </div>
 
           <div className="flex flex-col">
-            <label htmlFor="email" className="text-sm font-semibold">Email</label>
+            {/* <label htmlFor="email" className="text-sm font-semibold text-slate-700">Email</label> */}
             <input
               type="email"
-              placeholder="Enter your email"
+              placeholder="Email"
               name="email"
-              className="input-signup border-b-2 border-purple-600 py-2 px-3 focus:outline-none focus:border-purple-700 transition duration-300"
+              className="input-signup border-b-2 border-slate-100 py-2 px-3 focus:outline-none focus:border-slate-700 transition duration-300"
               value={email}
               onChange={handleEmail}
               required
@@ -132,12 +131,12 @@ function Signup({ user, setUser }) {
           </div>
 
           <div className="flex flex-col">
-            <label htmlFor="psw" className="text-sm font-semibold">Password</label>
+            {/* <label htmlFor="psw" className="text-sm font-semibold text-slate-700">Password</label> */}
             <input
               type="password"
               value={password}
-              placeholder="Enter your password"
-              className="input-signup border-b-2 border-purple-600 py-2 px-3 focus:outline-none focus:border-purple-700 transition duration-300"
+              placeholder="Password"
+              className="input-signup border-b-2 border-slate-100 py-2 px-3 focus:outline-none focus:border-slate-700 transition duration-300"
               onChange={handlePasswordChange}
               name="psw"
               required
@@ -145,28 +144,28 @@ function Signup({ user, setUser }) {
           </div>
 
           <div className="flex flex-col">
-            <label htmlFor="confirmPassword" className="text-sm font-semibold">Confirm Password</label>
+            {/* <label htmlFor="confirmPassword" className="text-sm font-semibold text-slate-700">Confirm Password</label> */}
             <input
               type="password"
-              placeholder="Confirm your password"
+              placeholder="Confirm Password"
               value={confirmpass}
               name="confirmPassword"
               onChange={confirm}
-              className="input-signup border-b-2 border-purple-600 py-2 px-3 focus:outline-none focus:border-purple-700 transition duration-300"
+              className="input-signup border-b-2 border-slate-100 py-2 px-3 focus:outline-none focus:border-slate-700 transition duration-300"
               required
             />
           </div>
-
           <button
             type="submit"
-            className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300"
+            className="bg-slate-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 w-[10vw]"
           >
             Submit
           </button>
 
-          <div className="text-center text-sm">
+
+          <div className="text-center text-slate-600 text-sm">
             Already have an account?
-            <Link to="/login" className="text-purple-600 hover:underline font-semibold">
+            <Link to="/login" className="text-slate-600 hover:underline font-semibold">
               Login
             </Link>
           </div>
