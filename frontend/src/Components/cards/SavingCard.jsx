@@ -93,12 +93,12 @@ const SavingCard = ({
   return (
     <div className="container mx-auto">
       <div className="card mt-8 shadow-lg">
-        <div className="card-header bg-green-300">
+        <div className="card-header bg-gray-500">
           <h5 className="font-semibold text-center text-lg">
             Title - {props.title}
           </h5>
         </div>
-        <div className="card-body bg-green-600 text-white">
+        <div className="card-body bg-gray-900 text-white">
           <div className="flex justify-between items-center">
             <div className="w-1/2">
               <p className="text-lg">
@@ -112,7 +112,7 @@ const SavingCard = ({
               <div className="mb-2">Completion:</div>
               <div className="progress">
                 <div
-                  className="progress-bar bg-purple-600"
+                  className="progress-bar bg-gray-500"
                   role="progressbar"
                   style={{ width: `${percentage > 100 ? 100 : percentage}%` }}
                   aria-valuenow={percentage}

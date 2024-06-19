@@ -7,77 +7,74 @@ import { useParams } from "react-router-dom";
 const Grouphome = ({ user, thememode, toggle }) => {
   const { id } = useParams();
   const [groupData, setgroupData] = useState([]);
-
-  console.log(groupData);
-  const [showGroup, setShowGroup] = useState(false);
   const [show, setShow] = useState(false);
   const [showPart, setShowPart] = useState(false);
-  const [showGroupJoin, setShowGroupJoin] = useState(false);
-  const [showFriend, setShowFriend] = useState(false);
-
-  const handleGroupClose = () => setShowGroup(false);
-  const handleGroupShow = () => setShowGroup(true);
-  const handleGroupJoinClose = () => setShowGroupJoin(false);
-  const handleGroupJoinShow = () => setShowGroupJoin(true);
-  const handleShowPart = () => setShowPart(true);
-  const handleClosePart = () => setShowPart(false);
-
-  const handleFriendClose = () => setShowFriend(false);
-  const handleFriendShow = () => setShowFriend(true);
   const [membersdata, setmembersdata] = useState([]);
-  const [paid, setPaid] = useState(false);
   const [approved, setApproved] = useState(false);
-  const [showGroupHome, setShowGroupHome] = useState(false);
-  const handleOpenGroup = () => {
-    setShowGroupHome(true);
-  };
-  console.log(groupData);
-
   const [input, setInput] = useState({
     amount: "",
     groupData,
     user,
   });
-  console.log(input);
-
   const [billSplitData, setBillSplitData] = useState([]);
-  const handleClose = () => setShow(false);
+
+  useEffect(() => {
+    getgroup();
+  }, []);
+
+  useEffect(() => {
+    const getMembers = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:3001/group/getmembers/${groupData._id}`
+        );
+        setmembersdata(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    if (groupData._id) {
+      getMembers();
+    }
+  }, [groupData]);
+
+  useEffect(() => {
+    setInput((prevInput) => ({
+      ...prevInput,
+      groupData,
+    }));
+  }, [groupData]);
+
+  const handleShowPart = () => setShowPart(true);
+  const handleClosePart = () => setShowPart(false);
   const handleShow = () => setShow(true);
+  const handleClose = () => setShow(false);
+
   const handleInput = (name) => (e) => {
     setInput({ ...input, [name]: e.target.value });
   };
 
-  //function to split bill among group members
   const handleSubmit = async () => {
     try {
-      const res = await axios.post(
-        `http://localhost:3001/group/splitbill`,
-        { input }
-      );
-      console.log(res.data);
+      const res = await axios.post(`http://localhost:3001/group/splitbill`, {
+        input,
+      });
       setBillSplitData(res.data.billSplit);
     } catch (err) {
       console.log(err);
     }
   };
 
-
-  //function to fetch group data
   const getgroup = async () => {
     try {
-      const res = await axios.get(
-        `http://localhost:3001/group/getgroup/${id}`
-      );
-      console.log(res.data);
+      const res = await axios.get(`http://localhost:3001/group/getgroup/${id}`);
       setgroupData(res.data);
       setBillSplitData(res.data.billSplit);
-      console.log("use effect", groupData);
     } catch (err) {
       console.log(err);
     }
   };
 
-  //Approve paid debts
   const handleApproved = async (memid) => {
     try {
       const res = await axios.put(
@@ -87,72 +84,40 @@ const Grouphome = ({ user, thememode, toggle }) => {
       setApproved((prev) => !prev);
       setBillSplitData(res.data.billSplit);
       getgroup();
-      console.log(res.data.billSplit);
     } catch (err) {
       console.log(err);
     }
   };
 
-  useEffect(() => {
-    getgroup();
-  }, []);
-
-  // function to fetch group members' data
-  useEffect(() => {
-    const getMembers = async () => {
-      try {
-        const res = await axios.get(
-          `http://localhost:3001/group/getmembers/${groupData._id}`
-        ); //add user Id
-        console.log("members", res.data);
-        setmembersdata(res.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    getMembers();
-  }, []);
-
-  useEffect(() => {
-    // This effect will run whenever groupData changes
-    setInput((prevInput) => ({
-      ...prevInput,
-      groupData,
-    }));
-  }, [groupData]);
   return (
     <>
       <Navbar thememode={thememode} toggle={toggle} />
 
-      <div
-        className="flex flex-col justify-center items-start bg-slate-700"
-      >
-        <div className="font-extrabold text-5xl mx-4 mt-4 underline underline-offset-8 decoration-[#8656cd] dark:text-[#f0f0f0]">
-          lund bill
+      <div className="min-h-screen  w-full flex flex-col justify-center items-center bg-slate-800 px-4">
+        <div className="font-extrabold text-5xl my-4 underline underline-offset-8 bg-white-100 dark:text-[#f0f0f0]">
+          Split Bill
         </div>
-        <div className="m-3 pt-3 text-4xl bg-[#f0f0f0] light:text-black font-bold dark:bg-[#181818] dark:text-white p-2">
+        <div className="m-3 pt-3 text-4xl bg-[#f0f0f0] font-bold dark:bg-[#181818] dark:text-white p-4 w-full text-center rounded-lg">
           Group Title: {groupData.title}
         </div>
 
-        <div className=" min-h-screen w-[98%] flex-col align-middle justify-center dark:text-white m-3">
-          <div className="flex">
-            {" "}
+        <div className="w-full flex flex-col items-center dark:text-white m-3">
+          <div className="flex space-x-4 w-full max-w-md">
             <button
               onClick={handleShowPart}
-              className="bg-[#8656cd] text-white rounded-lg w-full p-1 m-2"
+              className="bg-gray-900 text-white rounded-lg w-full p-2"
             >
               Participants
             </button>
             <button
-              className="bg-[#8656cd] text-white p-1 rounded-lg m-2 w-full"
+              className="bg-gray-900 text-white rounded-lg w-full p-2"
               onClick={handleShow}
             >
               Split Bill
             </button>
           </div>
 
-          {/* -----------------------------------------Bill Split Modal-------------------------------------- */}
+          {/* Bill Split Modal */}
           <Modal show={show} onHide={handleClose} animation={false} centered>
             <Modal.Header closeButton>
               <Modal.Title>Split Bill</Modal.Title>
@@ -164,21 +129,21 @@ const Grouphome = ({ user, thememode, toggle }) => {
                 name={"amount"}
                 value={input.amount}
                 onChange={handleInput("amount")}
+                className="w-full p-2 mt-2 border rounded-lg"
                 required
-              ></input>
+              />
             </Modal.Body>
             <Modal.Footer>
               <button
                 onClick={handleSubmit}
-                required
-                className="bg-[#8656cd] text-white rounded-lg w-full p-1 m-2"
+                className="bg-[#8656cd] text-white rounded-lg w-full p-2"
               >
                 Split Bill
               </button>
             </Modal.Footer>
           </Modal>
 
-          {/* -----------------------------------------Group Participants-------------------------------------- */}
+          {/* Group Participants Modal */}
           <Modal
             show={showPart}
             onHide={handleClosePart}
@@ -189,40 +154,42 @@ const Grouphome = ({ user, thememode, toggle }) => {
               <Modal.Title>Group Participants</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <div className="flex-col">
+              <div className="flex flex-col">
                 {membersdata?.map((data) => (
-                  <div> {data.username} </div>
+                  <div key={data._id} className="p-2">
+                    {data.username}
+                  </div>
                 ))}
               </div>
             </Modal.Body>
           </Modal>
 
-          {/* ---------------------------------------------------------Bill Split--------------------------------------------------- */}
-          {billSplitData[billSplitData.length - 1]?.map((mem) => (
-            <div
-              key={mem.userId}
-              className="mx-auto w-[50%] flex justify-around gap-2 items-center"
-            >
-              <div>
-                <b>Name: </b>
-                {mem.name}
+          {/* Bill Split Data */}
+          <div className="mt-4 w-full max-w-md">
+            {billSplitData[billSplitData.length - 1]?.map((mem) => (
+              <div
+                key={mem.userId}
+                className="w-full flex justify-between items-center p-2 bg-gray-100 dark:bg-gray-700 rounded-lg mb-2"
+              >
+                <div>
+                  <b>Name: </b>
+                  {mem.name}
+                </div>
+                <div>
+                  <b>Amount: </b>
+                  {mem.amount}
+                </div>
+                {groupData.userId === user._id && (
+                  <button
+                    onClick={() => handleApproved(mem.userId)}
+                    className="bg-[#8656cd] text-white p-2 rounded-lg"
+                  >
+                    {mem.approved === false ? "Approve" : "Approved"}
+                  </button>
+                )}
               </div>
-              <div>
-                <b>Amount: </b>
-                {mem.amount}
-              </div>
-              {/* <button onClick={handlePaid} style={{cursor:"pointer"}} className='bg-green-700 text-white p-2 m-2 rounded-md cursor-pointer' >{(mem[0].settled===false) ? "Mark as paid" : "Paid"}</button> */}
-              {groupData.userId == user._id && (
-                <button
-                  onClick={() => handleApproved(mem.userId)}
-                  style={{ cursor: "pointer" }}
-                  className="bg-[#8656cd] text-white p-2 m-2 rounded-md cursor-pointer"
-                >
-                  {mem.approved === false ? "Approve" : "Approved"}
-                </button>
-              )}
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </>
