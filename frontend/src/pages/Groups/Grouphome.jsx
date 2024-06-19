@@ -136,7 +136,7 @@ const Grouphome = ({ user, thememode, toggle }) => {
             <Modal.Footer>
               <button
                 onClick={handleSubmit}
-                className="bg-[#8656cd] text-white rounded-lg w-full p-2"
+                className="bg-gray-900 text-white rounded-lg w-full p-2"
               >
                 Split Bill
               </button>
