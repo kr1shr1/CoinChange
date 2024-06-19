@@ -1,36 +1,35 @@
-import React, { useEffect, useState } from 'react';
-import axios from "axios"
-import Navbar from '../../Components/Navbar/Navbar';
-import { useParams } from 'react-router-dom';
-import Modal from 'react-bootstrap/Modal';
-
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import Navbar from "../../Components/Navbar/Navbar";
+import { useParams } from "react-router-dom";
+import Modal from "react-bootstrap/Modal";
 
 export default function SimplifyDebt({ user, thememode, toggle }) {
-  console.log(user)
-  const { id } = useParams()
+  console.log(user);
+  const { id } = useParams();
   const [inputFields, setInputFields] = useState([]);
-  const [groupData, setgroupData] = useState([])
-  const [data, setData] = useState([])
+  const [groupData, setgroupData] = useState([]);
+  const [data, setData] = useState([]);
   const [commentflag, setcommentflag] = useState(false);
   const [showPart, setShowPart] = useState(false);
   const handleShowPart = () => setShowPart(true);
   const handleClosePart = () => setShowPart(false);
 
-  console.log(inputFields)
-  console.log(data)
-  const [membersdata, setmembersdata] = useState([])
+  console.log(inputFields);
+  console.log(data);
+  const [membersdata, setmembersdata] = useState([]);
 
   const getgroup = async () => {
     try {
       //function to fetch group data
-      const res = await axios.get(`http://localhost:3001/group/getgroup/${id}`)
-      console.log(res.data)
-      setgroupData(res.data)
-      console.log("use effect", groupData)
+      const res = await axios.get(`http://localhost:3001/group/getgroup/${id}`);
+      console.log(res.data);
+      setgroupData(res.data);
+      console.log("use effect", groupData);
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
-  }
+  };
   //function to handle input
   const handleInputChange = (index, fieldName, value) => {
     const updatedInputFields = [...inputFields];
@@ -39,7 +38,7 @@ export default function SimplifyDebt({ user, thememode, toggle }) {
   };
 
   const handleAddField = () => {
-    setInputFields([...inputFields, { paidBy: '', paidFor: '', amount: '' }]);
+    setInputFields([...inputFields, { paidBy: "", paidFor: "", amount: "" }]);
   };
 
   const handleRemoveField = (index) => {
@@ -76,32 +75,36 @@ export default function SimplifyDebt({ user, thememode, toggle }) {
     //function to simplify debts
     const simplify = async () => {
       try {
-        const res = await axios.post(`http://localhost:3001/group/simplifyDebt/${id}`, { outputArray })
-        console.log(res.data)
-        const val = res.data
-        setData(res.data)
+        const res = await axios.post(
+          `http://localhost:3001/group/simplifyDebt/${id}`,
+          { outputArray }
+        );
+        console.log(res.data);
+        const val = res.data;
+        setData(res.data);
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
-    }
-    simplify()
-
+    };
+    simplify();
   };
   useEffect(() => {
     //function to fetch all debts
     const getdebts = async () => {
       try {
-        const res = await axios.get(`http://localhost:3001/group/getDebts/${id}`)
-        console.log(res.data)
-        if (res.data) setData(res.data)
+        const res = await axios.get(
+          `http://localhost:3001/group/getDebts/${id}`
+        );
+        console.log(res.data);
+        if (res.data) setData(res.data);
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
-    }
-    getdebts()
-  }, [])
+    };
+    getdebts();
+  }, []);
 
-  const [commentText, setCommentText] = useState('');
+  const [commentText, setCommentText] = useState("");
 
   const handleCommentChange = (e) => {
     setCommentText(e.target.value);
@@ -114,10 +117,10 @@ export default function SimplifyDebt({ user, thememode, toggle }) {
         userId: user._id,
         text: commentText,
         groupId: id,
-        username: user.username
+        username: user.username,
       });
-      setCommentText('')
-      setcommentflag((prev) => !(prev))
+      setCommentText("");
+      setcommentflag((prev) => !prev);
     } catch (err) {
       console.log(err);
     }
@@ -127,35 +130,45 @@ export default function SimplifyDebt({ user, thememode, toggle }) {
   //function to retrieve comments
   const getcomments = async () => {
     try {
-      const response = await axios.get(`http://localhost:3001/group/getcomments/${id}`);
+      const response = await axios.get(
+        `http://localhost:3001/group/getcomments/${id}`
+      );
       setComments(response.data.commentss);
-      console.log(comments)
+      console.log(comments);
     } catch (error) {
-      console.error('Error fetching comments:', error);
+      console.error("Error fetching comments:", error);
     }
-  }
+  };
   useEffect(() => {
-    getcomments()
-  }, [commentflag, comments.length])
-
+    getcomments();
+  }, [commentflag, comments.length]);
 
   //function to retrieve members in a group
   useEffect(() => {
     const getMembers = async () => {
       try {
-        const res = await axios.get(`http://localhost:3001/group/getmembers/${id}`)
-        setmembersdata(res.data)
+        const res = await axios.get(
+          `http://localhost:3001/group/getmembers/${id}`
+        );
+        setmembersdata(res.data);
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
-    }
-    getMembers()
-  }, [])
+    };
+    getMembers();
+  }, []);
 
   //members list
   const Dropdown = ({ options, value, onChange }) => (
-    <select value={value} onChange={onChange} className="w-80 m-4 p-2 border border-gray-300 rounded-md" disabled={options.length <= 1}>
-      <option value="" disabled>Select members</option>
+    <select
+      value={value}
+      onChange={onChange}
+      className="w-80 m-4 p-2 border border-gray-300 rounded-md"
+      disabled={options.length <= 1}
+    >
+      <option value="" disabled>
+        Select members
+      </option>
       {options.map((option, index) => (
         <option key={index} value={option.username}>
           {option.username}
@@ -165,129 +178,247 @@ export default function SimplifyDebt({ user, thememode, toggle }) {
   );
 
   useEffect(() => {
-    getgroup()
-  }, [])
+    getgroup();
+  }, []);
 
   return (
-    <div className=' h-[150vh] dark:bg-[#181818] dark:text-white bg-[#f0f0f0]' >
+    <div className="h-auto text-white bg-slate-900">
       <Navbar thememode={thememode} toggle={toggle} />
-      <div className='font-extrabold text-5xl mx-4 mt-4 underline underline-offset-8 decoration-[#8656cd] dark:text-[#f0f0f0]'>Simplify Debts</div>
-      <div className='flex justify-between'>
-        <div className="m-3 pt-3 text-4xl bg-[#f0f0f0] light:text-black font-bold dark:bg-[#181818] dark:text-white p-2">
+      <div className="font-extrabold text-5xl mx-4 mt-4 underline underline-offset-8 decoration-slate-400 text-[#f0f0f0]">
+        Simplify Debts
+      </div>
+      <div className="mt-2 mb-2 mx-4 text-gray-600 dark:text-gray-400 text-2xl">
+        Streamline your Splits!
+      </div>
+      <div className="flex justify-between">
+        <div className="m-3 pt-3 text-3xl text-white p-2 underline underline-offset-4 decoration-slate-400">
           Group Title: {groupData.title}
         </div>
-        {/* Participants List */}
-        <button onClick={handleShowPart} className='bg-[#8656cd] text-white rounded-lg w-1/4 p-1 h-10 my-4 mx-4'>
-          Participants
+        <button
+          onClick={handleShowPart}
+          className="rounded-md transition ease-in-out delay-150 bg-slate-600 hover:bg-slate-700 hover:scale-105 duration-300 text-white font-bold w-1/6 p-1 h-10 my-4 mx-4"
+        >
+          View Friends
         </button>
       </div>
 
-      {/* Group members list */}
-      <Modal show={showPart} onHide={handleClosePart} animation={false} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Group Participants</Modal.Title>
+      <Modal
+        show={showPart}
+        onHide={handleClosePart}
+        animation={false}
+        centered
+      >
+        <Modal.Header className="bg-[#e2e8f0]">
+          <Modal.Title className="text-xl font-bold text-[#1b263b]">
+            Friends
+          </Modal.Title>
+          <button
+            type="button"
+            className="absolute top-0 right-0 mt-2 mr-2 text-black bg-gray-300 hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 rounded-full p-2"
+            onClick={handleClosePart}
+          >
+            <span aria-hidden="true" className="text-bold rounded-full">
+              x
+            </span>
+          </button>
         </Modal.Header>
-        <Modal.Body>
-          <div className='flex-col'>
-            {membersdata?.map(data => (
-              <div >{" "}{data.username}{" "}</div>
+        <Modal.Body className="bg-[#e2e8f0] text-[#1b263b] p-4">
+          <div className="flex flex-col space-y-2">
+            {membersdata?.map((data, index) => (
+              <div key={index} className="text-md font-medium text-gray-700">
+                {data.username}
+              </div>
             ))}
           </div>
         </Modal.Body>
       </Modal>
 
+      <div className="flex justify-between">
+        {/* comments section */}
+        <div className="bg-slate-900 w-1/2 ml-2">
+          <h3 className="underline text-2xl underline-offset-8 ml-4">
+            Messages:
+          </h3>
+          <div className="m-4 max-h-80 overflow-y-auto bg-gray-300 p-4 rounded-lg shadow-md">
+            {!comments[0] ? (
+              <p className="text-slate-600">No Message</p>
+            ) : (
+              comments.map((comment) => (
+                <div
+                  key={comment._id}
+                  className="border border-slate-600 bg-slate-700 flex flex-col justify-end p-4 my-2 rounded-md shadow-sm"
+                >
+                  <p className="text-sm text-slate-400 mb-1">
+                    ~{" "}
+                    {comment.username === user.username
+                      ? "Me"
+                      : comment.username}
+                  </p>
+                  <p className="text-slate-200">{comment.text}</p>
+                </div>
+              ))
+            )}
+          </div>
 
-      <div className='w-full flex justify-center bg-amber-500 dark:bg-[#282828] dark:text-white bg-[#cac8c8]'>
-      </div>
-      <form className=' p-3 mx-auto flex flex-col gap-3 justify-center'>
-        {inputFields.map((field, index) => (
-          <div className='flex justify-center gap-3 w-[40%] mx-auto rounded-lg ' >
-            <div key={index} className='gap-3'>
-              <div
-                className='text-gray-400'
-              >
-                <label htmlFor={`paidBy-${index}`}>Paid By</label>
-                <Dropdown
-                  options={membersdata}
-                  value={field.paidBy}
-                  onChange={(e) => handleInputChange(index, 'paidBy', e.target.value)}
-                />
-              </div>
-              <div className='text-gray-400'>
-                <label htmlFor={`paidFor-${index}`}>Paid To</label>
-                <Dropdown
-                  options={membersdata}
-                  value={field.paidFor}
-                  onChange={(e) => handleInputChange(index, 'paidFor', e.target.value)}
-                />
-              </div>
-              <input
-                type="number"
-                value={field.amount}
-                onChange={(e) => handleInputChange(index, 'amount', e.target.value)}
-                placeholder="Amount"
-                className='w-80 m-4'
-
-              />
-              <button type="button" className='bg-[#8656cd] p-2 rounded-md text-white m-2' onClick={() => handleRemoveField(index)}>
-                Remove
+          <div className="ml-2">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleAddComment();
+              }}
+            >
+              <button className="rounded-md transition ease-in-out delay-150 bg-slate-600 hover:bg-slate-700 hover:scale-105 duration-300 text-white font-bold px-6 py-2 m-2">
+                Send
               </button>
-            </div>
+              <input
+                type="text"
+                id="commentText"
+                value={commentText}
+                onChange={handleCommentChange}
+                placeholder="Type your message here"
+                className="w-3/4 m-2 p-2 border text-slate-900 border-gray-300 bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </form>
           </div>
-        ))}
+          {/* simplified output div */}
+          <div className="bg-slate-900">
+            {!data[0] ? (
+              <></>
+            ) : (
+              <>
+                {" "}
+                <h3 className="underline text-2xl my-4 underline-offset-8 ml-4">
+                  Simplified :
+                </h3>
+                {data?.map((debt) => (
+                  <>
+                    <div
+                      className="flex items-center bg-gray-300 rounded-2xl justify-between p-2 mx-auto my-2"
+                      key={debt[0]}
+                    >
+                      <div className="text-2xl text-slate-700 flex align-middle p-3">
+                        {debt[0]} will give {debt[1]} &#x20B9;{debt[2]}
+                      </div>
+                      {user.username == debt[1] && (
+                        <button
+                          onClick={async () => {
+                            try {
+                              const res = await axios.post(
+                                `http://localhost:3001/group/approveDebt/${id}`,
+                                debt
+                              );
+                              setData(res.data.simplifyDebt);
+                              console.log(res.data);
+                            } catch (err) {
+                              console.log(err);
+                            }
+                          }}
+                          className="rounded-md transition ease-in-out delay-150 bg-slate-600 hover:bg-slate-700 hover:scale-105 duration-300 text-white font-bold p-2 m-2"
+                        >
+                          {debt[3] === true ? "Approved" : "Approve"}
+                        </button>
+                      )}
+                      {user.username == debt[0] && debt[3] == true && (
+                        <div>Approved by {debt[1]}✅</div>
+                      )}
+                    </div>
+                  </>
+                ))}{" "}
+              </>
+            )}
+          </div>
+        </div>
 
-      </form>
-      <div className='flex w-full justify-center'> <button type="button" onClick={handleAddField} className='bg-[#8656cd] p-2 rounded-md text-white w-60 m-4'>
-        Add Field
-      </button>
-
+        {/* simplify div */}
         <div>
-          <button type="submit" className='bg-[#8656cd] w-60 p-2 rounded-md text-white m-4 ' onClick={handleSubmit}>Simplify</button></div></div>
-
-      {
-        data?.map(debt => (
-          <div className='flex items-center bg-gray-300 rounded-2xl justify-between p-2 mx-auto w-[60%] dark:bg-[#282828]'>
-            <div className='w-[60%] text-2xl flex align-middle p-3'>{debt[0]}{" "} owes {debt[1]} {" "}&#x20B9;{debt[2]}</div>
-
-            {user.username == debt[1] && <button onClick={async () => {
-              try {
-                const res = await axios.post(`http://localhost:3001/group/approveDebt/${id}`, debt)
-                setData(res.data.simplifyDebt)
-                console.log(res.data)
-              } catch (err) {
-                console.log(err)
-              }
-            }}
-              className='bg-[#8656cd] p-2 rounded-md text-white m-2'
-            >{debt[3] === true ? "Approved" : "Approve"}</button>}
-            {user.username == debt[0] && debt[3] == true && <div>Approved by {debt[1]}✅</div>}
+          <h3 className="underline text-2xl underline-offset-8 ml-4">Debts:</h3>
+          {/* input fields paid to paid by amount div */}
+          <div className="bg-gray-200 p-4 mt-4 rounded-md mr-3">
+            <form className="flex flex-col gap-4">
+              {!inputFields[0] ? (
+                <div className="text-slate-600 text-xl">No dues</div>
+              ) : (
+                inputFields.map((field, index) => (
+                  <div
+                    className="p-4 rounded-lg bg-slate-400 shadow-md"
+                    key={index}
+                  >
+                    <div className="flex flex-col gap-4">
+                      <div className="text-gray-40 flex mx-auto w-1/2 my-2">
+                        <label
+                          htmlFor={`paidBy-${index}`}
+                          className="mr-2 text-slate-600"
+                        >
+                          By
+                        </label>
+                        <Dropdown
+                          options={membersdata}
+                          value={field.paidBy}
+                          onChange={(e) =>
+                            handleInputChange(index, "paidBy", e.target.value)
+                          }
+                          className="w-full p-2 rounded-md bg-slate-700 text-gray-200 border border-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-500"
+                        />
+                      </div>
+                      <div className="text-gray-400 flex mx-auto w-1/2 my-2">
+                        <label
+                          htmlFor={`paidFor-${index}`}
+                          className="mr-2 text-slate-600"
+                        >
+                          To
+                        </label>
+                        <Dropdown
+                          options={membersdata}
+                          value={field.paidFor}
+                          onChange={(e) =>
+                            handleInputChange(index, "paidFor", e.target.value)
+                          }
+                          className="w-full p-2 rounded-md bg-slate-700 text-gray-200 border border-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-500"
+                        />
+                      </div>
+                      <div className="text-gray-400 flex mx-auto w-full justify-center align-middle my-2">
+                        <input
+                          type="number"
+                          value={field.amount}
+                          onChange={(e) =>
+                            handleInputChange(index, "amount", e.target.value)
+                          }
+                          placeholder="Amount"
+                          className="w-auto p-2 rounded-md bg-slate-700 text-gray-200 border border-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-500"
+                        />
+                        <button
+                          type="button"
+                          className="rounded-md h-[8vh] transition ease-in-out delay-150 bg-slate-600 hover:bg-slate-700 hover:scale-105 duration-300 text-white p-2 ml-2"
+                          onClick={() => handleRemoveField(index)}
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </form>
           </div>
-        ))
-      }
-      {/* Comments section */}
-      <h3 className='underline underline-offset-8 decoration-[#8656cd] m-4'>Comments:</h3>
 
-      <div className='m-4'>
-        <input
-          type="text"
-          id="commentText"
-          value={commentText}
-          onChange={handleCommentChange}
-          placeholder="Type your comment here"
-          className="w-[50%] m-2 p-2 border border-gray-300 rounded-md text-black"
-        />
-        <button onClick={handleAddComment} className="bg-[#8656cd] p-2 rounded-md text-white m-2">
-          Add Comment
-        </button>
-      </div>
-
-      <div className="m-4">
-        {comments.map((comment) => (
-          <div key={comment._id} className="border p-2 my-2 rounded-md">
-            <p>{comment.text}</p>
-            <p>By: {comment.username === user.username ? 'You' : comment.username}</p>
+          {/* add remove buttons */}
+          <div className="flex w-full justify-center bg-slate-900">
+            <button
+              type="button"
+              onClick={handleAddField}
+              className="rounded-md transition ease-in-out delay-150 bg-slate-600 hover:bg-slate-700 hover:scale-105 duration-300 text-white  p-2 w-60 m-4"
+            >
+              Add Due
+            </button>
+            <button
+              type="submit"
+              className="rounded-md transition ease-in-out delay-150 bg-slate-600 hover:bg-slate-700 hover:scale-105 duration-300 text-white w-60 p-2 m-4"
+              onClick={handleSubmit}
+            >
+              Simplify
+            </button>
           </div>
-        ))}
+        </div>
       </div>
     </div>
   );

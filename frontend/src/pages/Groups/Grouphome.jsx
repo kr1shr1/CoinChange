@@ -41,7 +41,6 @@ const Grouphome = ({ user, thememode, toggle }) => {
   console.log(input);
 
   const [billSplitData, setBillSplitData] = useState([]);
-  console.log("bill split data:", billSplitData);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const handleInput = (name) => (e) => {
@@ -52,7 +51,7 @@ const Grouphome = ({ user, thememode, toggle }) => {
   const handleSubmit = async () => {
     try {
       const res = await axios.post(
-        `http://localhost:3001/api/group/splitbill`,
+        `http://localhost:3001/group/splitbill`,
         { input }
       );
       console.log(res.data);
@@ -67,7 +66,7 @@ const Grouphome = ({ user, thememode, toggle }) => {
   const getgroup = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:3001/api/group/getgroup/${id}`
+        `http://localhost:3001/group/getgroup/${id}`
       );
       console.log(res.data);
       setgroupData(res.data);
@@ -82,7 +81,7 @@ const Grouphome = ({ user, thememode, toggle }) => {
   const handleApproved = async (memid) => {
     try {
       const res = await axios.put(
-        `http://localhost:3001/api/group/markapproved/${groupData._id}`,
+        `http://localhost:3001/group/markapproved/${groupData._id}`,
         { userId: memid }
       );
       setApproved((prev) => !prev);
@@ -103,7 +102,7 @@ const Grouphome = ({ user, thememode, toggle }) => {
     const getMembers = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:3001/api/group/getmembers/${groupData._id}`
+          `http://localhost:3001/group/getmembers/${groupData._id}`
         ); //add user Id
         console.log("members", res.data);
         setmembersdata(res.data);
