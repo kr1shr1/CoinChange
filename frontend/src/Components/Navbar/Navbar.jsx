@@ -7,8 +7,11 @@ import "tailwindcss/components.css";
 import "tailwindcss/utilities.css";
 import "./Navbar.css";
 import { FaRegEnvelope } from "react-icons/fa";
+import { useAuth } from "../../Context/AuthContext";
+
 
 function Navbar({ thememode, toggle, setUser, user, setFlag, flag }) {
+  const {logout} = useAuth();
   const [navuser, setNavuser] = useState({});
   const [showNav, setShowNav] = useState(false);
   const navigate = useNavigate();
@@ -30,6 +33,7 @@ function Navbar({ thememode, toggle, setUser, user, setFlag, flag }) {
   }, [user?._id, flag]);
   const handleLogout = () => {
     localStorage.clear();
+    logout();
     navigate("/login");
   };
   const handleLogin = () => {

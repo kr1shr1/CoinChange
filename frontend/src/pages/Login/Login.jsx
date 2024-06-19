@@ -1,29 +1,33 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
+import { useAuth } from "../../Context/AuthContext";
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'; // Import eye icons
 
 function Login({ user, setUser }) {
   const navigate = useNavigate();
-
-  const [email, setUsername] = useState("");
+  const { login, isAuthenticated } = useAuth();
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
 
   const handlePasswordChange = (event) => {
-    event.preventDefault();
-    const newPassword = event.target.value;
-    setPassword(newPassword);
+    setPassword(event.target.value);
   };
 
   const handleUsernameChange = (event) => {
-    event.preventDefault();
-    const newUsername = event.target.value;
-    setUsername(newUsername);
+    setEmail(event.target.value);
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   const submitFunction = async (event) => {
+    login();
     event.preventDefault();
-    if (email.length < 8) {
-      alert("Username must be at least 5 characters long.");
+    if (email.length < 5) {
+      alert("Email must be at least 5 characters long.");
       return;
     }
 
@@ -33,22 +37,18 @@ function Login({ user, setUser }) {
     }
 
     const userData = { email, password };
-    console.log(userData)
     try {
       const res = await axios.post("http://localhost:3001/auth/login", userData);
-      console.log(res.data)
       setUser(res.data);
       localStorage.setItem('user', JSON.stringify(res.data));
       navigate('/dashboard');
     } catch (err) {
       console.log(err.response.data.message);
-      alert(err.response.data.message)
+      alert(err.response.data.message);
     }
 
     setPassword("");
-    setUsername("");
-    // alert("Logged in successfully");
-    // navigate('/dashboard');
+    setEmail("");
   };
 
   return (
@@ -58,7 +58,6 @@ function Login({ user, setUser }) {
           <div className="text-3xl font-bold text-center text-slate-600 mb-6">Login</div>
           <div className="space-y-4">
             <div className="flex flex-col">
-              {/* <label htmlFor="username" className="text-sm font-semibold text-slate-700">Email</label> */}
               <input
                 type="text"
                 placeholder="Email"
@@ -70,10 +69,9 @@ function Login({ user, setUser }) {
               />
             </div>
             
-            <div className="flex flex-col">
-              {/* <label htmlFor="password" className="text-sm font-semibold text-slate-700">Password</label> */}
+            <div className="flex flex-col relative">
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Password"
                 name="password"
                 value={password}
@@ -81,6 +79,12 @@ function Login({ user, setUser }) {
                 className="input-login border-b-2 border-slate-100 py-2 px-3 focus:outline-none focus:border-slate-700 transition duration-300"
                 required
               />
+              <span
+                className="absolute right-3 top-3 cursor-pointer"
+                onClick={togglePasswordVisibility}
+              >
+                {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+              </span>
             </div>
 
             <button 
@@ -91,7 +95,7 @@ function Login({ user, setUser }) {
             </button>
 
             <div className="text-center text-slate-600 text-sm">
-              Not having any account?  
+              Don't have an account?  
               <Link to="/signup" className="text-slate-600 hover:underline font-semibold">
                 Sign up
               </Link>

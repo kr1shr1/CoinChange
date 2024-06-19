@@ -235,18 +235,18 @@ export default function SimplifyDebt({ user, thememode, toggle }) {
 
       <div className="flex justify-between">
         {/* comments section */}
-        <div className="bg-slate-900 w-1/2 ml-2">
-          <h3 className="underline text-2xl underline-offset-8 ml-4">
+        <div className="bg-slate-900 w-1/2 ml-2 overflow-x-auto">
+          <h3 className="underline text-2xl underline-offset-8 ml-4 text-slate-200">
             Messages:
           </h3>
-          <div className="m-4 max-h-80 overflow-y-auto bg-gray-300 p-4 rounded-lg shadow-md">
+          <div className="m-4 max-h-80 overflow-y-auto bg-slate-800 p-4 rounded-lg shadow-md">
             {!comments[0] ? (
-              <p className="text-slate-600">No Message</p>
+              <p className="text-slate-400">No Message</p>
             ) : (
               comments.map((comment) => (
                 <div
                   key={comment._id}
-                  className="border border-slate-600 bg-slate-700 flex flex-col justify-end p-4 my-2 rounded-md shadow-sm"
+                  className="bg-slate-700 flex flex-col justify-end p-4 my-2 rounded-md shadow-sm"
                 >
                   <p className="text-sm text-slate-400 mb-1">
                     ~{" "}
@@ -254,7 +254,7 @@ export default function SimplifyDebt({ user, thememode, toggle }) {
                       ? "Me"
                       : comment.username}
                   </p>
-                  <p className="text-slate-200">{comment.text}</p>
+                  <p className="text-slate-200 break-words">{comment.text}</p>
                 </div>
               ))
             )}

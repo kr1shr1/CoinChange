@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
 import "./Dues.css";
 import axios from "axios";
 import BillCard from "../../Components/cards/BillCard.jsx";
 import Navbar from "../../Components/Navbar/Navbar.jsx";
-import ToggleBtn from "../../Components/Navbar/ToggleBtn.jsx";
 
 function Dues({ user, thememode, toggle }) {
   const [billflag, setbillflag] = useState(false);
@@ -28,45 +25,74 @@ function Dues({ user, thememode, toggle }) {
 
   const [deleteDiv, setdeleteDiv] = useState(false);
   const [BillData, setBillData] = useState([]);
+  const [formErrors, setFormErrors] = useState({
+    title: "",
+    dueDate: "",
+    amount: "",
+    toWhom: "",
+    recurring: "",
+    currency: "",
+  });
+
   // ---------------input -----------------------
   const handleBillInput = (name) => (e) => {
-    setdueItem({ ...dueItem, [name]: e.target.value });
-  };
-  // -----------------function to manage mails -------------------
-  const mailsendstart = async () => {
-    try {
-      const reqmail = user.email;
-      console.log(reqmail);
-      const res = await axios.post(
-        "http://localhost:3001/api/mail/sendstartmail",
-        { reqmail }
-      );
-      alert("Message Sent Successfully");
-    } catch (err) {
-      console.error("Error sending start mail:", err);
-    }
+    const value = e.target.value;
+    setdueItem({ ...dueItem, [name]: value });
+
+    // Clear previous error message when user starts typing again
+    setFormErrors({ ...formErrors, [name]: "" });
   };
 
-  const mailsendrecurring = async (recurring) => {
-    try {
-      const reqmail = user.email;
-      const duedate = dueItem.dueDate;
-      const recurring = dueItem.recurring;
-      console.log(reqmail);
-      const res = await axios.post(
-        "http://localhost:3001/mail/sendmailrecurring",
-        { reqmail, duedate, recurring }
-      );
-      alert("Message Sent Successfully");
-    } catch (err) {
-      console.error("Error sending recurring mail:", err);
-    }
-  };
   // ----------------------- Submit -------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(dueItem);
+    // Validate form fields
+    let valid = true;
+    const errors = {
+      title: "",
+      dueDate: "",
+      amount: "",
+      toWhom: "",
+      recurring: "",
+      currency: "",
+    };
+
+    if (!dueItem.title) {
+      errors.title = "Title is required";
+      valid = false;
+    }
+
+    if (!dueItem.dueDate) {
+      errors.dueDate = "Due date is required";
+      valid = false;
+    }
+
+    if (!dueItem.amount || dueItem.amount <= 0) {
+      errors.amount = "Amount must be greater than 0";
+      valid = false;
+    }
+
+    if (!dueItem.toWhom) {
+      errors.toWhom = "To whom is required";
+      valid = false;
+    }
+
+    if (!dueItem.recurring) {
+      errors.recurring = "Recurring is required";
+      valid = false;
+    }
+
+    if (!dueItem.currency) {
+      errors.currency = "Currency is required";
+      valid = false;
+    }
+
+    if (!valid) {
+      setFormErrors(errors);
+      return;
+    }
+
     try {
       const res = await axios.post("http://localhost:3001/bill/addBill", {
         dueItem,
@@ -83,30 +109,41 @@ function Dues({ user, thememode, toggle }) {
         recurring: "",
         currency: "",
       });
+
+      setFormErrors({
+        title: "",
+        dueDate: "",
+        amount: "",
+        toWhom: "",
+        recurring: "",
+        currency: "",
+      });
     } catch (err) {
       console.log(err.response.data);
     }
   };
 
   const handleDelete = (id) => {
-  const confirmDelete = window.confirm("Are you sure you want to delete this bill?");
-  if (!confirmDelete) {
-    return;
-  }
-
-  const delBill = async (id) => {
-    try {
-      const res = await axios.delete(
-        `http://localhost:3001/bill/deleteBill/${id}`
-      );
-      console.log(res.data.message);
-      setbillflag((prev) => !prev);
-    } catch (err) {
-      console.log(err);
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this bill?"
+    );
+    if (!confirmDelete) {
+      return;
     }
+
+    const delBill = async (id) => {
+      try {
+        const res = await axios.delete(
+          `http://localhost:3001/bill/deleteBill/${id}`
+        );
+        console.log(res.data.message);
+        setbillflag((prev) => !prev);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    delBill(id);
   };
-  delBill(id);
-};
 
   //! To get the prev bills of user from the database
   useEffect(() => {
@@ -126,7 +163,7 @@ function Dues({ user, thememode, toggle }) {
 
   return (
     <>
-      <Navbar/>
+      <Navbar />
       <div className="outer min-h-screen w-full bg-gray-900">
         <div className="font-extrabold text-5xl mx-4 mt-4 underline underline-offset-8 text-gray-200">
           Bills and Dues
@@ -139,7 +176,7 @@ function Dues({ user, thememode, toggle }) {
         <div className="hero-section h-full flex flex-wrap justify-between">
           <div className="hero-left border border-gray-600 bg-gray-900 p-6 rounded-lg shadow-lg w-full md:w-[45%] lg:w-[30%]">
             <div className="due flex flex-col gap-4 mb-4">
-              <label htmlFor="Title" className="text-black ">
+              <label htmlFor="Title" className="text-black">
                 Reason
               </label>
               <input
@@ -149,9 +186,14 @@ function Dues({ user, thememode, toggle }) {
                 placeholder="Input due-title"
                 value={dueItem.title}
                 onChange={handleBillInput("title")}
-                className="p-2 rounded-md dark:bg-gray-700"
+                className={`p-2 rounded-md dark:bg-gray-700 ${
+                  formErrors.title && "border-red-500"
+                }`}
                 required
               />
+              {formErrors.title && (
+                <span className="text-sm text-red-500">{formErrors.title}</span>
+              )}
             </div>
 
             <div className="due flex flex-col gap-4 mb-4">
@@ -166,8 +208,15 @@ function Dues({ user, thememode, toggle }) {
                 placeholder="Input date of due"
                 value={dueItem.dueDate}
                 onChange={handleBillInput("dueDate")}
-                className="p-2 rounded-md dark:bg-gray-700 dark:text-gray-400"
+                className={`p-2 rounded-md dark:bg-gray-700 dark:text-gray-400 ${
+                  formErrors.dueDate && "border-red-500"
+                }`}
               />
+              {formErrors.dueDate && (
+                <span className="text-sm text-red-500">
+                  {formErrors.dueDate}
+                </span>
+              )}
             </div>
 
             <div className="due flex flex-col gap-4 mb-4">
@@ -182,8 +231,13 @@ function Dues({ user, thememode, toggle }) {
                 placeholder="Input amount"
                 value={dueItem.amount}
                 onChange={handleBillInput("amount")}
-                className="p-2 rounded-md dark:bg-gray-700"
+                className={`p-2 rounded-md dark:bg-gray-700 ${
+                  formErrors.amount && "border-red-500"
+                }`}
               />
+              {formErrors.amount && (
+                <span className="text-sm text-red-500">{formErrors.amount}</span>
+              )}
             </div>
 
             <div className="due flex flex-col gap-4 mb-4">
@@ -198,8 +252,13 @@ function Dues({ user, thememode, toggle }) {
                 value={dueItem.toWhom}
                 onChange={handleBillInput("toWhom")}
                 placeholder="To whom"
-                className="p-2 rounded-md dark:bg-gray-700"
+                className={`p-2 rounded-md dark:bg-gray-700 ${
+                  formErrors.toWhom && "border-red-500"
+                }`}
               />
+              {formErrors.toWhom && (
+                <span className="text-sm text-red-500">{formErrors.toWhom}</span>
+              )}
             </div>
 
             <div className="due flex flex-col gap-4 mb-4">
@@ -211,12 +270,17 @@ function Dues({ user, thememode, toggle }) {
                 id="currency"
                 value={dueItem.currency}
                 onChange={handleBillInput("currency")}
-                className="p-2 rounded-md dark:bg-gray-700 dark:text-gray-400"
+                className={`p-2 rounded-md dark:bg-gray-700 dark:text-gray-400 ${
+                  formErrors.currency && "border-red-500"
+                }`}
                 required
               >
                 <option>Select:</option>
                 <option value="inr">INR</option>
               </select>
+              {formErrors.currency && (
+                <span className="text-sm text-red-500">{formErrors.currency}</span>
+              )}
             </div>
 
             <div className="due flex flex-col gap-4 mb-4">
@@ -229,7 +293,9 @@ function Dues({ user, thememode, toggle }) {
                 required
                 value={dueItem.recurring}
                 onChange={handleBillInput("recurring")}
-                className="p-2 rounded-md dark:bg-gray-700 dark:text-gray-400"
+                className={`p-2 rounded-md dark:bg-gray-700 dark:text-gray-400 ${
+                  formErrors.recurring && "border-red-500"
+                }`}
               >
                 <option value="">Select</option>
                 <option value="daily">Daily</option>

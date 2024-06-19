@@ -6,7 +6,7 @@ import axios from "axios";
 import { Button } from "react-bootstrap";
 
 const BillCard = ({ billflag, setbillflag, user, BillData, thememode }) => {
-  const [show, setShow] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [BillInput, setBillInput] = useState({
     userId: user._id,
     title: "",
@@ -17,15 +17,44 @@ const BillCard = ({ billflag, setbillflag, user, BillData, thememode }) => {
   });
 
   const { title, amount, toWhom, dueDate } = BillInput;
+  const [formErrors, setFormErrors] = useState({
+    title: "",
+    amount: "",
+    toWhom: "",
+    dueDate: "",
+  });
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   // Function to handle the bill's input
   const handleBillInput = (name) => (e) => {
-    setBillInput({ ...BillInput, [name]: e.target.value });
+    const value = e.target.value;
+    setBillInput({ ...BillInput, [name]: value });
+
+    // Clear previous error message when user starts typing again
+    setFormErrors({ ...formErrors, [name]: "" });
   };
 
   // Handling the closing and opening of edit modal
-  const handleClose = () => setShow(false);
-  const handleShow = () => {
+  const handleCloseEditModal = () => {
+    setShowEditModal(false);
+    setBillInput({
+      userId: user._id,
+      title: "",
+      dueDate: "",
+      amount: "",
+      toWhom: "",
+      recurring: "",
+    });
+    setFormErrors({
+      title: "",
+      amount: "",
+      toWhom: "",
+      dueDate: "",
+    });
+  };
+
+  const handleShowEditModal = () => {
     setBillInput({
       userId: user._id,
       title: BillData.title,
@@ -34,11 +63,11 @@ const BillCard = ({ billflag, setbillflag, user, BillData, thememode }) => {
       toWhom: BillData.toWhom,
       recurring: BillData.recurring,
     });
-    setShow(true);
+    setShowEditModal(true);
   };
 
   // Function to handle submitting the edit data
-  const handleSubmit = (e) => {
+  const handleEditSubmit = (e) => {
     e.preventDefault();
     const editBill = async () => {
       try {
@@ -47,44 +76,70 @@ const BillCard = ({ billflag, setbillflag, user, BillData, thememode }) => {
           { BillInput }
         );
         console.log(res.data.message);
-        setBillInput({
-          userId: user._id,
-          title: "",
-          dueDate: "",
-          amount: "",
-          toWhom: "",
-          recurring: "",
-        });
         setbillflag((prev) => !prev);
-        handleClose();
+        handleCloseEditModal();
       } catch (err) {
         console.log(err);
       }
     };
-    editBill();
-  };
 
-  // Handling the delete function with confirmation
-  const handleDelete = (id) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this bill?"
-    );
-    if (!confirmDelete) {
+    // Validate form fields
+    let valid = true;
+    const errors = {
+      title: "",
+      amount: "",
+      toWhom: "",
+      dueDate: "",
+    };
+
+    if (!BillInput.title) {
+      errors.title = "Title is required";
+      valid = false;
+    }
+
+    if (!BillInput.amount || BillInput.amount <= 0) {
+      errors.amount = "Amount must be greater than 0";
+      valid = false;
+    }
+
+    if (!BillInput.toWhom) {
+      errors.toWhom = "To whom is required";
+      valid = false;
+    }
+
+    if (!BillInput.dueDate) {
+      errors.dueDate = "Due date is required";
+      valid = false;
+    }
+
+    if (!valid) {
+      setFormErrors(errors);
       return;
     }
 
-    const delBill = async (id) => {
-      try {
-        const res = await axios.delete(
-          `http://localhost:3001/bill/deleteBill/${id}`
-        );
-        console.log(res.data.message);
-        setbillflag((prev) => !prev);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    delBill(id);
+    editBill();
+  };
+
+  // Handling the delete function with confirmation modal
+  const handleShowDeleteModal = () => {
+    setShowDeleteModal(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setShowDeleteModal(false);
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const res = await axios.delete(
+        `http://localhost:3001/bill/deleteBill/${id}`
+      );
+      console.log(res.data.message);
+      setbillflag((prev) => !prev);
+      handleCloseDeleteModal();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   // Function to track past due payments
@@ -118,7 +173,7 @@ const BillCard = ({ billflag, setbillflag, user, BillData, thememode }) => {
           </Card.Text>
           <div className="d-flex justify-content-end">
             <AiFillEdit
-              onClick={handleShow}
+              onClick={handleShowEditModal}
               style={{
                 cursor: "pointer",
                 color: "#007BFF",
@@ -126,76 +181,89 @@ const BillCard = ({ billflag, setbillflag, user, BillData, thememode }) => {
               }}
             />
             <AiFillDelete
-              onClick={() => handleDelete(BillData._id)}
+              onClick={handleShowDeleteModal}
               style={{ cursor: "pointer", color: "#DC3545" }}
             />
           </div>
         </Card.Body>
       </Card>
 
-      <Modal show={show} onHide={handleClose} animation={false} centered>
-        <Modal.Header
-          closeButton
-          style={{ backgroundColor: "#007BFF", color: "#FFFFFF" }}
-        >
+      {/* Edit Modal */}
+      <Modal show={showEditModal} onHide={handleCloseEditModal} animation={false} centered>
+        <Modal.Header closeButton style={{ backgroundColor: "#007BFF", color: "#FFFFFF" }}>
           <Modal.Title>Edit Bill</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <label htmlFor="amount" style={{ color: "#333333" }}>
-            Amount:
-          </label>
-          <input
-            type="number"
-            value={amount}
-            name={"amount"}
-            onChange={handleBillInput("amount")}
-            required
-            className="form-control"
-          />
+          <form onSubmit={handleEditSubmit}>
+            <div className="mb-3">
+              <label htmlFor="amount" style={{ color: "#333333" }}>Amount:</label>
+              <input
+                type="number"
+                value={amount}
+                name="amount"
+                onChange={handleBillInput("amount")}
+                required
+                className={`form-control ${formErrors.amount && "is-invalid"}`}
+              />
+              {formErrors.amount && <div className="invalid-feedback">{formErrors.amount}</div>}
+            </div>
 
-          <label htmlFor="person" style={{ color: "#333333" }}>
-            To Whom:
-          </label>
-          <input
-            type="text"
-            name={"person"}
-            value={toWhom}
-            onChange={handleBillInput("toWhom")}
-            required
-            className="form-control"
-          />
+            <div className="mb-3">
+              <label htmlFor="person" style={{ color: "#333333" }}>To Whom:</label>
+              <input
+                type="text"
+                name="person"
+                value={toWhom}
+                onChange={handleBillInput("toWhom")}
+                required
+                className={`form-control ${formErrors.toWhom && "is-invalid"}`}
+              />
+              {formErrors.toWhom && <div className="invalid-feedback">{formErrors.toWhom}</div>}
+            </div>
 
-          <label htmlFor="title" style={{ color: "#333333" }}>
-            Title:
-          </label>
-          <input
-            type="text"
-            name={"title"}
-            value={title}
-            onChange={handleBillInput("title")}
-            required
-            className="form-control"
-          />
+            <div className="mb-3">
+              <label htmlFor="title" style={{ color: "#333333" }}>Title:</label>
+              <input
+                type="text"
+                name="title"
+                value={title}
+                onChange={handleBillInput("title")}
+                required
+                className={`form-control ${formErrors.title && "is-invalid"}`}
+              />
+              {formErrors.title && <div className="invalid-feedback">{formErrors.title}</div>}
+            </div>
 
-          <label htmlFor="date" style={{ color: "#333333" }}>
-            Date:
-          </label>
-          <input
-            type="date"
-            name={"dueDate"}
-            value={dueDate}
-            onChange={handleBillInput("dueDate")}
-            required
-            className="form-control"
-          />
+            <div className="mb-3">
+              <label htmlFor="date" style={{ color: "#333333" }}>Date:</label>
+              <input
+                type="date"
+                name="dueDate"
+                value={dueDate}
+                onChange={handleBillInput("dueDate")}
+                required
+                className={`form-control ${formErrors.dueDate && "is-invalid"}`}
+              />
+              {formErrors.dueDate && <div className="invalid-feedback">{formErrors.dueDate}</div>}
+            </div>
+
+            <div className="modal-footer">
+              <Button variant="secondary" onClick={handleCloseEditModal}>Cancel</Button>
+              <Button variant="primary" type="submit">Save</Button>
+            </div>
+          </form>
         </Modal.Body>
+      </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <Modal show={showDeleteModal} onHide={handleCloseDeleteModal} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Delete</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure you want to delete this bill?</Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button variant="primary" onClick={handleSubmit}>
-            Save
-          </Button>
+          <Button variant="secondary" onClick={handleCloseDeleteModal}>Cancel</Button>
+          <Button variant="danger" onClick={() => handleDelete(BillData._id)}>Delete</Button>
         </Modal.Footer>
       </Modal>
     </div>
