@@ -24,7 +24,6 @@
     font-size: 25px;
     color: #333;
     background-color: #FFD700;
-    /* Gold */
     padding: 10px;
     border-radius: 10px;
 }
@@ -71,7 +70,7 @@
     padding: 10px;
     text-align: left;
     width: 100%;
-    border: 2px solid #FFD700;
+    border: 2px solid #333;
     /* Gold */
     border-radius: 8px;
 }
