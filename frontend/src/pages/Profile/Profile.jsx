@@ -32,153 +32,32 @@ const style = {
 const Profile = ({ user, setUser, setIsLoggedIn }) => {
   const params = useParams();
   const [data, setData] = useState({});
-  const [open, setOpen] = useState(false);
-  const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState("");
-  const [profileRating, setProfileRating] = useState(0);
-  const [reviews, setReviews] = useState(null);
-  const [openSnack, setOpenSnack] = useState(false);
-  const [openEditSnack, setOpenEditSnack] = useState(false);
-  const [newPhoto, setNewPhoto] = useState(null);
 
   useEffect(() => {
-    const getUser = async () => {
+    const getTrans = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:3001/api/user/getUser/${params.id}`
+          `http://localhost:3001/trans/getTotalStats/${user._id}`
         );
-        setData(res.data.user);
+        console.log(res)
+        setData(res.data);
       } catch (err) {
         console.log(err);
       }
-    };
-
-    const getRating = async () => {
-      try {
-        const res = await axios.get(
-          `http://localhost:3001/api/reviews/getRating/${params.id}`
-        );
-        setProfileRating(res.data.rating);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    const getReviews = async () => {
-      try {
-        const res = await axios.get(
-          `http://localhost:3001/api/reviews/getReviews/${params.id}`
-        );
-        setReviews(res.data.reviews);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    getUser();
-    getRating();
-    getReviews();
-  }, [params.id]);
-
-  const handleSubmit = async () => {
-    try {
-      const review = {
-        _id: uuidv4(),
-        Reviewer: user._id,
-        ReviewedUser: params.id,
-        ReviewerName: user.name,
-        Rating: rating,
-        Comment: comment,
-        Date: new Date(),
-      };
-      const res = await axios.post(
-        `http://localhost:3001/api/reviews/addReview/${params.id}`,
-        review
-      );
-      setComment("");
-      setRating(0);
-      handleClose();
-      toast.success("Review added successfully!");
-    } catch (err) {
-      console.log(err);
     }
-  };
-
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  const handleCloseSnack = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpenSnack(false);
-  };
-  const handleCloseEditSnack = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpenEditSnack(false);
-  };
-  const action = (
-    <React.Fragment>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleCloseSnack}
-      >
-        <CloseIcon fontSize="small" />
-      </IconButton>
-    </React.Fragment>
-  );
-  const actionedit = (
-    <React.Fragment>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleCloseEditSnack}
-      >
-        <CloseIcon fontSize="small" />
-      </IconButton>
-    </React.Fragment>
-  );
-
-  const handlePhotoChange = (e) => {
-    const file = e.target.files[0];
-    setNewPhoto(file);
-  };
-
-  const handlePhotoUpdate = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("photo", newPhoto);
-      await axios.post(
-        `http://localhost:3001/api/user/updatePhoto/${params.id}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      window.location.reload();
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
+    getTrans();
+  }, [user]);
   return (
     <div>
       <Navbar user={user} setIsLoggedIn={setIsLoggedIn} />
-      <div className="profile-container">
+      <div className="profile-container h-[85vh]">
         <div className="profile-header">
           <div className="profile-info">
-            <h1>{data?.username}</h1>
-            <div className="name" style={{ fontSize: "24px", color: "white" }}>
-              Name: {data?.name}
+            <div className="name text-slate-800" style={{ fontSize: "24px"}}>
+              Name: {user?.name}
             </div>
-            <div className="rating">
-              {Math.round(profileRating * 100) / 100}
+            <div className="name text-slate-900" style={{ fontSize: "24px"}}>
+              Username: {user?.name}
             </div>
           </div>
           <label htmlFor="photo-upload" className="photo-icon">
@@ -186,7 +65,7 @@ const Profile = ({ user, setUser, setIsLoggedIn }) => {
               type="file"
               id="photo-upload"
               accept="image/*"
-              onChange={handlePhotoChange}
+              // onChange={handlePhotoChange}
               style={{ display: "none" }}
             />
             <Avatar src="/broken-image.jpg" className="avatar" />
@@ -194,88 +73,25 @@ const Profile = ({ user, setUser, setIsLoggedIn }) => {
         </div>
 
         <div className="separator"></div>
-        <div className="profile-details">
-          <div className="w-1/2 float-left mr-4">
+        <div className="profile-details flex justify-between">
+          <div className="w-1/2 float-left">
             <div className="about-section bg-gray-100 p-4 rounded font-semibold text-gold mt-2">
               <h2>About</h2>
-              <div className="email mt-4">EMAIL: {data?.email}</div>
-              <div className="age mt-4">Age: {data?.age}</div>
-              <div className="location mt-4">Location: {data?.location}</div>
-              <div className="gender mt-4">Gender: {data?.gender}</div>
+              <div className="email mt-4">EMAIL: {user?.email}</div>
+              <div className="age mt-4">Friends: {user?.friends.length}</div>
+              <div className="location mt-4">Groups: {user?.groups.length}</div>
             </div>
-            <Link to={`/reviews/${params.id}`} className="see-reviews-button">
-              <Button
-                variant="contained"
-                style={{
-                  backgroundColor: "#006400",
-                  color: "goldenrod",
-                  borderRadius: "5%",
-                  padding: "12px 24px",
-                  fontSize: "16px",
-                }}
-                size="small"
-              >
-                <span style={{ color: "goldenrod" }}>See Reviews</span>
-              </Button>
-            </Link>
           </div>
-
+          <div className="w-1/2 float-left">
+            <div className="about-section bg-gray-100 p-4 rounded font-semibold text-gold mt-2">
+              <h2>Incomes and Expenses</h2>
+              <div className="income mt-4">Total Income: ₹ {data?.totalIncome}</div>
+              <div className="expenses mt-4">Total Expenses: ₹ {data?.totalExpense}</div>
+              <div className="balance mt-4">Net Balance: ₹ {data?.balance}</div>
+            </div>
+          </div>
         </div>
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <Typography component="legend" variant="subtitle1">
-              How is {data.name} as a driver/rider? Leave a review!
-            </Typography>
-            <div className="flex flex-col justify-around">
-              <Rating
-                name="simple-controlled"
-                value={rating}
-                onChange={(event, newValue) => {
-                  setRating(newValue);
-                }}
-                className="mb-4 mt-2"
-                aria-required
-              />
-              <TextField
-                id="outlined-multiline-static"
-                label="Review"
-                multiline
-                rows={4}
-                className="my-2"
-                value={comment}
-                onChange={(e) => {
-                  setComment(e.target.value);
-                }}
-              />
-            </div>
-            <div className="flex justify-end mt-5">
-              <Button variant="outlined" size="large" onClick={handleSubmit}>
-                Add Review
-              </Button>
-            </div>
-          </Box>
-        </Modal>
       </div>
-      <ToastContainer />
-      <Snackbar
-        open={openSnack}
-        autoHideDuration={6000}
-        action={action}
-        onClose={handleCloseSnack}
-        message="Review deleted"
-      />
-      <Snackbar
-        open={openEditSnack}
-        autoHideDuration={6000}
-        action={actionedit}
-        onClose={handleCloseEditSnack}
-        message="Review edited"
-      />
     </div>
   );
 };

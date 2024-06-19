@@ -83,8 +83,6 @@ const SavingCard = ({
         `http://localhost:3001/savings/deleteSaving/${props._id}`
       );
       console.log(res.data.saving);
-      // const sav=res.data.saving;
-      // setSavingData(savingData.filter(data=>data._id!=sav._id));
     } catch (err) {
       console.log(err);
     }

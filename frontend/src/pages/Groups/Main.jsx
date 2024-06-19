@@ -10,8 +10,7 @@ export default function Main({ user, setUser, thememode, toggle }) {
   const [showGroupJoin, setShowGroupJoin] = useState(false);
   const [showAddFriend, setShowAddFriend] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState(null);
-  const [groupData, setGroupData] = useState([]); // Here's the correct declaration
-
+  const [groupData, setGroupData] = useState([]);
   const [friendName, setFriendName] = useState("");
   const [groupInput, setGroupInput] = useState({
     userId: user._id,
@@ -23,10 +22,11 @@ export default function Main({ user, setUser, thememode, toggle }) {
     JoingCode: "",
   });
 
+  const [formErrors, setFormErrors] = useState({}); // State for form validation errors
+
   const { title, groupCode } = groupInput;
   const { JoingCode } = joinCode;
 
-  // Modal opening and closing logic
   const handleGroupClose = () => setShowGroup(false);
   const handleGroupShow = () => setShowGroup(true);
   const handleGroupJoinClose = () => setShowGroupJoin(false);
@@ -34,7 +34,6 @@ export default function Main({ user, setUser, thememode, toggle }) {
   const handleAddFriendShow = () => setShowAddFriend(true);
   const handleAddFriendClose = () => setShowAddFriend(false);
 
-  // Handling input
   const handleGroupInput = (name) => (e) => {
     setGroupInput({ ...groupInput, [name]: e.target.value });
   };
@@ -47,7 +46,6 @@ export default function Main({ user, setUser, thememode, toggle }) {
     setFriendName(e.target.value);
   };
 
-  // Generating random group join code logic
   const uuid = () => {
     var S4 = () => {
       return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
@@ -68,8 +66,12 @@ export default function Main({ user, setUser, thememode, toggle }) {
     );
   };
 
-  // Function to send friend request
   const handleSendRequest = async () => {
+    if (friendName.trim() === "") {
+      setFormErrors({ friendName: "Friend name cannot be empty" });
+      return;
+    }
+
     try {
       const res = await axios.put(
         `http://localhost:3001/friend/sendRequest/${user._id}`,
@@ -79,13 +81,19 @@ export default function Main({ user, setUser, thememode, toggle }) {
       );
       alert(res.data.message);
       setFriendName("");
+      setFormErrors({});
+      handleAddFriendClose();
     } catch (err) {
       console.log(err);
     }
   };
 
-  // Create group function
   const handleSubmit = (e) => {
+    if (title.trim() === "") {
+      setFormErrors({ title: "Group name cannot be empty" });
+      return;
+    }
+
     const groupCode = uuid();
     const addGroup = async () => {
       try {
@@ -94,29 +102,35 @@ export default function Main({ user, setUser, thememode, toggle }) {
         });
         const val = res.data.newgroup;
         setGroupData((prev) => [...prev, val]);
+        setFormErrors({});
+        handleGroupClose();
       } catch (err) {
         console.log(err);
       }
     };
     addGroup();
-    console.log(groupData);
     setGroupInput({
       userId: user._id,
       title: "",
+      groupCode: "",
     });
-    handleGroupClose();
   };
 
-  // Function to join group
   const handleJoin = () => {
+    if (JoingCode.trim() === "") {
+      setFormErrors({ JoingCode: "Group code cannot be empty" });
+      return;
+    }
+
     const addGroup = async () => {
       try {
         const res = await axios.post("http://localhost:3001/group/join", {
           joinCode,
         });
-        console.log(res.data.message);
         const temp = res.data.newgroup;
         setGroupData((prev) => [...prev, temp]);
+        setFormErrors({});
+        handleGroupJoinClose();
       } catch (err) {
         console.log(err.response.data.message);
       }
@@ -141,6 +155,7 @@ export default function Main({ user, setUser, thememode, toggle }) {
     };
     getGroups();
   }, []);
+
   return (
     <div
       style={{ backgroundColor: thememode === "dark" ? "#181818" : "white" }}
@@ -150,7 +165,6 @@ export default function Main({ user, setUser, thememode, toggle }) {
         <div className="flex justify-between w-full">
           <div>
             <div className="font-extrabold text-5xl mx-4 mt-4 underline underline-offset-8 decoration-slate-400 text-[#f0f0f0]">
-              {" "}
               Friends & Groups
             </div>
             <div className="mx-4 mt-4 text-gray-400 text-2xl ">
@@ -200,7 +214,7 @@ export default function Main({ user, setUser, thememode, toggle }) {
           )}
         </div>
 
-        {/* Example Modal schema */}
+        {/* Add Group Modal */}
         <Modal
           show={showGroup}
           onHide={handleGroupClose}
@@ -233,6 +247,9 @@ export default function Main({ user, setUser, thememode, toggle }) {
               className="w-full px-3 py-2 border border-gray-300 bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
+            {formErrors.title && (
+              <span className="text-red-600">{formErrors.title}</span>
+            )}
           </Modal.Body>
           <Modal.Footer className="bg-[#e2e8f0] flex justify-end">
             <button
@@ -244,6 +261,8 @@ export default function Main({ user, setUser, thememode, toggle }) {
             </button>
           </Modal.Footer>
         </Modal>
+
+        {/* Join Group Modal */}
         <Modal
           show={showGroupJoin}
           onHide={handleGroupJoinClose}
@@ -279,6 +298,9 @@ export default function Main({ user, setUser, thememode, toggle }) {
               className="w-full px-3 py-2 border border-gray-300 bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
+            {formErrors.JoingCode && (
+              <span className="text-red-600">{formErrors.JoingCode}</span>
+            )}
           </Modal.Body>
           <Modal.Footer className="bg-[#e2e8f0] flex justify-end">
             <button
@@ -290,6 +312,8 @@ export default function Main({ user, setUser, thememode, toggle }) {
             </button>
           </Modal.Footer>
         </Modal>
+
+        {/* Add Friend Modal */}
         <Modal
           show={showAddFriend}
           onHide={handleAddFriendClose}
@@ -325,6 +349,9 @@ export default function Main({ user, setUser, thememode, toggle }) {
               className="w-full px-3 py-2 border border-gray-300 bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
+            {formErrors.friendName && (
+              <span className="text-red-600">{formErrors.friendName}</span>
+            )}
           </Modal.Body>
           <Modal.Footer className="bg-[#e2e8f0] flex justify-end">
             <button

@@ -4,7 +4,6 @@
     background-image: url('https://img.freepik.com/free-vector/gradient-transport-logo-template_23-2151353006.jpg?t=st=1718140364~exp=1718143964~hmac=8404226ac4309100877593c9f032ae9862227b3cfcb09c94d622ed5ac90c6f94&w=1060');
     background-size: 65.7%;
     background-position: center;
-    min-height: 110vh;
     border-bottom: 2px solid #333;
 }
 
@@ -49,7 +48,7 @@
 
 .separator {
     border-bottom: 1px solid #ccc;
-    margin: 20px 0;
+    /* margin: 20px 0; */
 }
 
 .profile-details {
@@ -61,10 +60,11 @@
 .about-section {
     background-color: rgba(0, 0, 0, 0.486);
     height: 40vh;
-    width: 75vh;
+    width: 100vh;
     padding-top: 4vh;
     /* Corrected unit */
     border-radius: 8px;
+    margin-left: 2vh;
     margin-bottom: 20px;
     font-family: 'Roboto', sans-serif;
     font-size: 20px;
