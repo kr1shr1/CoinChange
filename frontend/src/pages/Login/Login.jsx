@@ -4,9 +4,9 @@ import axios from "axios";
 import { useAuth } from "../../Context/AuthContext";
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'; // Import eye icons
 
-function Login({ user, setUser }) {
+function Login() {
   const navigate = useNavigate();
-  const { login, isAuthenticated } = useAuth();
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
@@ -24,7 +24,6 @@ function Login({ user, setUser }) {
   };
 
   const submitFunction = async (event) => {
-    login();
     event.preventDefault();
     if (email.length < 5) {
       alert("Email must be at least 5 characters long.");
@@ -39,8 +38,7 @@ function Login({ user, setUser }) {
     const userData = { email, password };
     try {
       const res = await axios.post("http://localhost:3001/auth/login", userData);
-      setUser(res.data);
-      localStorage.setItem('user', JSON.stringify(res.data));
+      login(res.data);
       navigate('/dashboard');
     } catch (err) {
       console.log(err.response.data.message);

@@ -15,12 +15,8 @@ import ProtectedRoute from './Config/ProtectedRoute.js';
 import { AuthProvider } from './Context/AuthContext.js';
 import { useAuth } from './Context/AuthContext.js';
 
-
 function App() {
-  const [user, setUser] = useState((localStorage.getItem("user")) || {});
-  // Update localStorage when user state changes
-  const {isAuthenticated} = useAuth();
-  console.log(isAuthenticated)
+  const [user, setUser] = useState((JSON.parse(localStorage.getItem("user"))) || {});
   useEffect(() => {
     localStorage.setItem("user", JSON.stringify(user));
   }, [user]);
@@ -29,8 +25,8 @@ function App() {
     <AuthProvider>
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<Login user={user} setUser={setUser}/>} />
-        <Route path="/signup" element={<Signup user={user} setUser={setUser}/>} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route element = {<ProtectedRoute />}>
           <Route path="/" element={<Dashboard user={user} setUser={setUser}/>} />
           <Route path="/dashboard" element={<Dashboard user={user} setUser={setUser}/>} />

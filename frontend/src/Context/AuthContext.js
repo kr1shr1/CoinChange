@@ -1,21 +1,28 @@
 // src/context/AuthContext.js
-import React, { createContext, useState, useContext } from 'react';
+import React, { useEffect, createContext, useState, useContext } from 'react';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  const login = () => {
-    setIsAuthenticated(true);
+  const [user, setUser] = useState({})
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem('user');
+    if (loggedInUser) {
+        setUser(JSON.parse(loggedInUser));
+    }
+}, [user._id]);
+  const login = (user) => {
+    setUser(user)
+    localStorage.setItem('user', JSON.stringify(user));
   };
 
   const logout = () => {
-    setIsAuthenticated(false);
+    setUser(null)
+    localStorage.removeItem('user')
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ user, setUser, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

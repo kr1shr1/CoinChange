@@ -10,19 +10,17 @@ import { FaRegEnvelope } from "react-icons/fa";
 import { useAuth } from "../../Context/AuthContext";
 
 
-function Navbar({ thememode, toggle, setUser, user, setFlag, flag }) {
+function Navbar({flag }) {
   const {logout} = useAuth();
   const [navuser, setNavuser] = useState({});
   const [showNav, setShowNav] = useState(false);
   const navigate = useNavigate();
-  const [f, setF] = useState(0);
   useEffect(() => {
     const check = async () => {
       try {
         const loggedInUser = localStorage.getItem("user");
         if (loggedInUser) {
           const foundUser = JSON.parse(loggedInUser);
-          console.log(foundUser);
           setNavuser(foundUser);
         }
       } catch (err) {
@@ -30,7 +28,7 @@ function Navbar({ thememode, toggle, setUser, user, setFlag, flag }) {
       }
     };
     check();
-  }, [user?._id, flag]);
+  }, [flag]);
   const handleLogout = () => {
     localStorage.clear();
     logout();
@@ -73,7 +71,6 @@ function Navbar({ thememode, toggle, setUser, user, setFlag, flag }) {
             onClick={handleLogin}
           >
             LogIn
-            {console.log(user)}
           </button>
         ) : (
           <button
